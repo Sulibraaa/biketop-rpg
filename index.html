@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biketop RPG — Suliman</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root {
+  --bg: #0A0A0F;
+  --bg2: #12121A;
+  --bg3: #1A1A26;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --text: #F0EFF8;
+  --text2: rgba(240,239,248,0.6);
+  --text3: rgba(240,239,248,0.35);
+  --purple: #7B6FE8;
+  --purple2: #534AB7;
+  --purple3: #3C3489;
+  --purple-light: rgba(123,111,232,0.15);
+  --green: #1D9E75;
+  --green-light: rgba(29,158,117,0.15);
+  --amber: #EF9F27;
+  --amber-light: rgba(239,159,39,0.15);
+  --coral: #D85A30;
+  --coral-light: rgba(216,90,48,0.15);
+  --red: #E24B4A;
+  --red-light: rgba(226,75,74,0.15);
+  --silver: #B4B2A9;
+  --gold: #EF9F27;
+  --platine: #85B7EB;
+  --crystal: #ED93B1;
+  --divin: #EF9F27;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+.app { max-width: 780px; margin: 0 auto; padding: 16px; }
+
+/* HEADER */
+.char-header { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; }
+.avatar-wrap { position: relative; flex-shrink: 0; }
+.avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--purple3); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 20px; font-weight: 700; color: #EEEDFE; position: relative; z-index: 1; }
+.prestige-ring { position: absolute; inset: -4px; border-radius: 50%; border: 3px solid var(--gold); z-index: 0; }
+.prestige-ring2 { position: absolute; inset: -9px; border-radius: 50%; border: 2px solid var(--gold); opacity: 0.4; z-index: 0; }
+.prestige-stars { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); display: flex; gap: 2px; background: var(--bg2); padding: 2px 6px; border-radius: 99px; border: 0.5px solid var(--border2); z-index: 2; }
+@keyframes pulse-ring { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.pulse { animation: pulse-ring 2s ease-in-out infinite; }
+.char-info { flex: 1; min-width: 0; }
+.char-name { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
+.class-badge { font-size: 11px; font-weight: 500; padding: 2px 10px; border-radius: 99px; font-family: var(--font-body); }
+.master-badge { font-size: 11px; font-weight: 500; padding: 2px 10px; border-radius: 99px; background: var(--amber-light); color: var(--amber); border: 0.5px solid var(--amber); display: none; font-family: var(--font-body); }
+.char-sub { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+.xp-wrap { height: 6px; background: var(--bg3); border-radius: 99px; overflow: hidden; max-width: 280px; margin-bottom: 4px; }
+.xp-bar { height: 100%; border-radius: 99px; transition: width 0.5s ease, background 0.4s; }
+.xp-label { font-size: 11px; color: var(--text3); }
+.char-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+.streak-pill { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 99px; background: var(--purple-light); color: var(--purple); border: 0.5px solid var(--purple); }
+.buff-pill { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 99px; background: var(--green-light); color: var(--green); border: 0.5px solid var(--green); }
+.spokes-pill { font-size: 12px; font-weight: 500; color: var(--amber); }
+
+/* STATS */
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 12px; }
+.stat-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; }
+.stat-name { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+.stat-val { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--text); }
+.stat-sub { font-size: 10px; color: var(--text3); margin-top: 1px; }
+.stat-bar { margin-top: 6px; height: 2px; background: var(--bg3); border-radius: 99px; overflow: hidden; }
+.stat-bar-fill { height: 100%; border-radius: 99px; transition: width 0.5s; }
+
+/* NAV */
+.nav { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; background: var(--bg2); padding: 4px; border-radius: var(--radius); border: 0.5px solid var(--border); }
+.nav-btn { font-size: 11px; padding: 7px 10px; border-radius: var(--radius-sm); border: none; background: transparent; color: var(--text2); cursor: pointer; font-family: var(--font-body); transition: all 0.15s; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.nav-btn.active { background: var(--purple); color: #fff; font-weight: 500; }
+.nav-btn:hover:not(.active) { background: var(--bg3); color: var(--text); }
+.page { display: none; }
+.page.visible { display: block; }
+
+/* CARDS */
+.card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; }
+.card-title { font-family: var(--font-display); font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.sec-title { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.sec-title::after { content:''; flex:1; height: 0.5px; background: var(--border); }
+.pill { font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 500; white-space: nowrap; }
+.row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 0.5px solid var(--border); }
+.row:last-child { border-bottom: none; }
+
+/* PROGRESS */
+.prog-wrap { margin-bottom: 8px; }
+.prog-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+.prog-track { height: 6px; background: var(--bg3); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
+
+/* HABITS */
+.habit-item { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; cursor: pointer; user-select: none; transition: all 0.15s; }
+.habit-item:hover { border-color: var(--border2); }
+.habit-item.done { background: var(--purple-light); border-color: var(--purple); }
+.h-chk { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+.habit-item.done .h-chk { background: var(--purple); border-color: var(--purple); color: #fff; }
+.h-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); }
+.habit-item.done .h-name { color: var(--purple); }
+.h-xp { font-size: 11px; color: var(--text3); white-space: nowrap; }
+.habit-item.done .h-xp { color: var(--purple); }
+
+/* QUESTS */
+.quest-item { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; cursor: pointer; transition: all 0.15s; }
+.quest-item:hover { border-color: var(--border2); }
+.quest-item.done { background: var(--green-light); border-color: var(--green); }
+.q-chk { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.quest-item.done .q-chk { background: var(--green); border-color: var(--green); color: #fff; }
+.q-label { flex: 1; font-size: 13px; color: var(--text); }
+.quest-item.done .q-label { color: var(--green); }
+.q-xp { font-size: 11px; font-weight: 500; color: var(--purple); white-space: nowrap; }
+.quest-item.done .q-xp { color: var(--green); }
+.quest-item.locked { opacity: 0.35; cursor: default; pointer-events: none; }
+
+/* BUTTONS */
+.btn-primary { width: 100%; padding: 12px; background: var(--purple); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; font-family: var(--font-body); transition: all 0.15s; margin-top: 8px; }
+.btn-primary:hover { background: var(--purple2); }
+.btn-outline { font-size: 12px; padding: 6px 14px; border-radius: 99px; border: 0.5px solid var(--border2); background: transparent; color: var(--text2); cursor: pointer; font-family: var(--font-body); transition: all 0.15s; }
+.btn-outline:hover { background: var(--bg3); color: var(--text); }
+.btn-green { font-size: 12px; padding: 6px 14px; border-radius: 99px; border: 0.5px solid var(--green); background: var(--green-light); color: var(--green); cursor: pointer; font-family: var(--font-body); white-space: nowrap; }
+.btn-amber { font-size: 12px; padding: 6px 14px; border-radius: 99px; border: 0.5px solid var(--amber); background: var(--amber-light); color: var(--amber); cursor: pointer; font-family: var(--font-body); white-space: nowrap; }
+.btn-red { font-size: 12px; padding: 6px 14px; border-radius: 99px; border: 0.5px solid var(--red); background: var(--red-light); color: var(--red); cursor: pointer; font-family: var(--font-body); }
+.btn-disabled { opacity: 0.35; cursor: default !important; pointer-events: none; }
+
+/* SHOP */
+.shop-item { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.shop-item.active-buff { border-color: var(--green); background: var(--green-light); }
+.shop-ico { width: 34px; height: 34px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.shop-price { font-size: 12px; font-weight: 500; color: var(--amber); white-space: nowrap; }
+
+/* ACHIEVEMENT */
+.ach-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+.ach-card.unlocked { border-color: var(--green); }
+.ach-card.locked { background: var(--bg); border-color: var(--border); opacity: 0.5; }
+.ach-ico { width: 34px; height: 34px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.ach-card.locked .ach-ico { background: var(--bg3); color: var(--text3); }
+
+/* CHAPTER */
+.chapter { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 6px; overflow: hidden; }
+.chapter.active-ch { border-color: var(--purple); }
+.chapter.done-ch { border-color: var(--green); }
+.chapter.locked-ch { opacity: 0.4; }
+.ch-top { display: flex; align-items: center; gap: 10px; padding: 10px 12px; cursor: pointer; }
+.chapter.locked-ch .ch-top { cursor: default; }
+.ch-num { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; color: #fff; }
+.ch-body { padding: 0 12px 12px; display: none; }
+.chapter.open .ch-body { display: block; }
+.task-item { display: flex; align-items: flex-start; gap: 8px; padding: 7px 10px; border-radius: var(--radius-sm); background: var(--bg3); margin-bottom: 5px; cursor: pointer; user-select: none; }
+.task-item.done { background: var(--green-light); }
+.task-chk { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--border2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.task-item.done .task-chk { background: var(--green); border-color: var(--green); color: #fff; }
+
+/* CQ BANNER */
+.cq-banner { display: none; border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; border: 1.5px solid; }
+.cq-banner.visible { display: block; }
+.cqb-obj { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px; border-radius: var(--radius-sm); background: var(--bg); border: 0.5px solid var(--border); cursor: pointer; margin-bottom: 6px; user-select: none; }
+.cqb-obj.checked { background: var(--green-light); border-color: var(--green); }
+.cqb-obj-chk { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.cqb-obj.checked .cqb-obj-chk { background: var(--green); border-color: var(--green); color: #fff; }
+
+/* WEEKLY BANNER */
+.weekly-banner { background: var(--green-light); border: 0.5px solid var(--green); border-radius: var(--radius-sm); padding: 10px 13px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+
+/* EQUIPMENT */
+.eq-slots { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 10px; }
+.eq-slot { background: var(--bg3); border: 0.5px dashed var(--border2); border-radius: var(--radius-sm); padding: 10px 8px; text-align: center; cursor: pointer; transition: all 0.15s; }
+.eq-slot.equipped { background: var(--bg2); border: 0.5px solid var(--border2); border-style: solid; }
+.eq-slot.equipped.std { border-color: var(--silver); }
+.eq-slot.equipped.elite { border-color: var(--platine); }
+.eq-slot.equipped.leg { border-color: var(--amber); }
+
+/* LOG */
+.log-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--border); }
+.log-row:last-child { border-bottom: none; }
+.log-label { font-size: 12px; color: var(--text2); width: 110px; flex-shrink: 0; }
+.log-opts { display: flex; gap: 5px; flex-wrap: wrap; }
+.log-btn { font-size: 11px; padding: 4px 10px; border-radius: 99px; border: 0.5px solid var(--border2); background: transparent; color: var(--text); cursor: pointer; font-family: var(--font-body); transition: all 0.15s; }
+.log-btn.sel-good { background: var(--green-light); border-color: var(--green); color: var(--green); }
+.log-btn.sel-mid { background: var(--amber-light); border-color: var(--amber); color: var(--amber); }
+.log-btn.sel-bad { background: var(--red-light); border-color: var(--red); color: var(--red); }
+.log-input { width: 60px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); padding: 4px 8px; font-size: 12px; color: var(--text); background: var(--bg3); }
+
+/* COMPETITION */
+.podium-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 10px; }
+.podium-card { border-radius: var(--radius-sm); padding: 10px 8px; text-align: center; border: 0.5px solid; }
+
+/* PARAM */
+.param-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+.param-row:last-child { border-bottom: none; }
+.param-label { flex: 1; font-size: 13px; color: var(--text); }
+.param-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.param-input { width: 80px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); padding: 5px 8px; font-size: 12px; color: var(--text); background: var(--bg3); text-align: right; }
+.toggle { width: 36px; height: 20px; background: var(--purple); border-radius: 99px; position: relative; cursor: pointer; flex-shrink: 0; }
+.toggle-dot { width: 14px; height: 14px; background: #fff; border-radius: 50%; position: absolute; right: 3px; top: 3px; transition: all 0.2s; }
+.toggle.off { background: var(--bg3); }
+.toggle.off .toggle-dot { right: auto; left: 3px; }
+
+/* METRIC CARDS */
+.metric-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
+.metric { background: var(--bg2); border-radius: var(--radius-sm); padding: 12px 14px; border: 0.5px solid var(--border); }
+.metric-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+.metric-val { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--text); }
+.metric-sub { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+/* TOAST */
+.toast { position: fixed; top: 20px; right: 20px; background: var(--bg2); border: 0.5px solid var(--purple); border-radius: var(--radius-sm); padding: 10px 16px; font-size: 13px; font-weight: 500; color: var(--text); opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; max-width: 280px; line-height: 1.4; }
+.toast.show { opacity: 1; }
+.toast.gold { border-color: var(--amber); }
+.toast.green-t { border-color: var(--green); }
+
+/* SAVE ROW */
+.save-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 12px; }
+.save-status { font-size: 12px; color: var(--text3); flex: 1; }
+.save-status.ok { color: var(--green); }
+
+/* SET HEADER */
+.set-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.set-ico { width: 34px; height: 34px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+
+/* SPIN */
+@keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+.spinning { animation: spin 1s linear infinite; display: inline-block; }
+
+/* MOBILE */
+@media(max-width:600px) {
+  .app { padding: 8px; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .char-right { display: none; }
+  .nav { overflow-x: auto; flex-wrap: nowrap; }
+  .eq-slots { grid-template-columns: repeat(2,1fr); }
+  .metric-grid { grid-template-columns: repeat(2,1fr); }
+  .podium-grid { grid-template-columns: repeat(3,1fr); }
+}
+</style>
+<!-- Firebase CDN compat (pas de module, accessible globalement) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyA_d5xV-G2AEJRzXx03EWOpl5KxxV3lBKM",
+    authDomain: "systeme-rpg.firebaseapp.com",
+    projectId: "systeme-rpg",
+    storageBucket: "systeme-rpg.firebasestorage.app",
+    messagingSenderId: "61616360007",
+    appId: "1:61616360007:web:17a987c7bb478a9121bf62"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const _db = firebase.firestore();
+  const _auth = firebase.auth();
+
+  _auth.onAuthStateChanged((user) => {
+    window._fbUser = user;
+    const statusEl = document.getElementById('firebaseStatus');
+    const loginEl = document.getElementById('fbLoginSection');
+    const logoutEl = document.getElementById('fbLogoutSection');
+    if(!statusEl) return;
+    if(user) {
+      statusEl.textContent = 'Connecte : ' + user.email;
+      statusEl.style.color = 'var(--green)';
+      if(loginEl) loginEl.style.display = 'none';
+      if(logoutEl) logoutEl.style.display = 'flex';
+      window.loadFromFirebase && window.loadFromFirebase();
+    } else {
+      statusEl.textContent = 'Non connecte';
+      statusEl.style.color = 'var(--text3)';
+      if(loginEl) loginEl.style.display = 'block';
+      if(logoutEl) logoutEl.style.display = 'none';
+    }
+  });
+</script>
+</head>
+<body>
+<div class="app">
+<div class="toast" id="toast"></div>
+
+<!-- CHAR HEADER -->
+<div class="char-header">
+  <div class="avatar-wrap" id="avatarWrap">
+    <div class="avatar" id="avatar">SUL</div>
+  </div>
+  <div class="char-info">
+    <div class="char-name">
+      <span id="charName">Suliman</span>
+      <span class="class-badge" id="classBadge"></span>
+      <span class="master-badge" id="masterBadge">Maitre I ✦</span>
+    </div>
+    <div class="char-sub" id="classDesc"></div>
+    <div class="xp-wrap"><div class="xp-bar" id="xpBar"></div></div>
+    <div class="xp-label"><span id="xpCur">0</span> / <span id="xpNext">0</span> XP · Niv. <span id="lvlDisp">1</span></div>
+    <div style="font-size:11px;margin-top:3px" id="classHint"></div>
+  </div>
+  <div class="char-right">
+    <div class="streak-pill" id="streakPill"><i class="ti ti-flame" style="font-size:11px;margin-right:3px"></i><span id="streakVal">0</span> jours</div>
+    <div class="buff-pill" id="buffPill" style="display:none"><i class="ti ti-bolt" style="font-size:11px;margin-right:3px"></i><span id="buffVal"></span></div>
+    <div class="spokes-pill" id="spokesPill">0 ⚙</div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-name"><i class="ti ti-barbell" style="font-size:12px;color:#7B6FE8"></i>Force</div>
+    <div class="stat-val" id="statForce">12</div>
+    <div class="stat-sub">Push/Pull/Legs</div>
+    <div class="stat-bar"><div class="stat-bar-fill" id="barForce" style="background:#7B6FE8"></div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-name"><i class="ti ti-moon" style="font-size:12px;color:#1D9E75"></i>Recuperation</div>
+    <div class="stat-val" id="statRecup">9</div>
+    <div class="stat-sub">Sommeil & mental</div>
+    <div class="stat-bar"><div class="stat-bar-fill" id="barRecup" style="background:#1D9E75"></div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-name"><i class="ti ti-apple" style="font-size:12px;color:#EF9F27"></i>Vitalite</div>
+    <div class="stat-val" id="statVita">7</div>
+    <div class="stat-sub">Nutrition</div>
+    <div class="stat-bar"><div class="stat-bar-fill" id="barVita" style="background:#EF9F27"></div></div>
+  </div>
+  <div class="stat-card" style="border-color:rgba(123,111,232,0.3)">
+    <div class="stat-name"><i class="ti ti-flame" style="font-size:12px;color:#7B6FE8"></i><span style="color:#7B6FE8">Volonte</span></div>
+    <div class="stat-val" style="color:#7B6FE8" id="statVolo">5</div>
+    <div class="stat-sub" id="voloSub">Novice</div>
+    <div class="stat-bar"><div class="stat-bar-fill" id="barVolo" style="background:#7B6FE8"></div></div>
+  </div>
+</div>
+
+<!-- CQ BANNER -->
+<div class="cq-banner" id="cqBanner"></div>
+
+<!-- SAVE ROW -->
+<div class="save-row">
+  <i class="ti ti-device-floppy" style="font-size:14px;color:#7B6FE8"></i>
+  <span class="save-status" id="saveStatus">Chargement...</span>
+  <button class="btn-outline" id="saveBtn"><i class="ti ti-device-floppy" style="font-size:12px;margin-right:3px"></i>Sauvegarder</button>
+  <button class="btn-red" id="resetBtn"><i class="ti ti-trash" style="font-size:12px;margin-right:3px"></i>Reset</button>
+</div>
+
+<!-- MASTER ROW -->
+<div style="display:none;align-items:center;gap:10px;padding:12px 14px;background:var(--amber-light);border:1.5px solid var(--amber);border-radius:var(--radius);margin-bottom:12px" id="masterRow">
+  <i class="ti ti-crown" style="font-size:18px;color:var(--amber);flex-shrink:0"></i>
+  <span style="font-size:12px;color:var(--amber);flex:1;line-height:1.4"><strong>Niveau 160 atteint !</strong> Active le mode Maitre : retour niv. 60, stats conservees, difficulte x2.</span>
+  <button class="btn-amber" id="prestigeBtn">Activer Maitre</button>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn active" onclick="showPage('habitudes',this)"><i class="ti ti-flame" style="font-size:12px"></i>Habitudes</button>
+  <button class="nav-btn" onclick="showPage('quetes',this)"><i class="ti ti-sword" style="font-size:12px"></i>Quetes</button>
+  <button class="nav-btn" onclick="showPage('histoire',this)"><i class="ti ti-book" style="font-size:12px"></i>Histoire</button>
+  <button class="nav-btn" onclick="showPage('inventaire',this)"><i class="ti ti-shield" style="font-size:12px"></i>Inventaire</button>
+  <button class="nav-btn" onclick="showPage('spokes',this)"><i class="ti ti-coin" style="font-size:12px"></i>Spokes</button>
+  <button class="nav-btn" onclick="showPage('paliers',this)"><i class="ti ti-trophy" style="font-size:12px"></i>Paliers</button>
+  <button class="nav-btn" onclick="showPage('achievements',this)"><i class="ti ti-medal" style="font-size:12px"></i>Achievements</button>
+  <button class="nav-btn" onclick="showPage('competition',this)"><i class="ti ti-podium" style="font-size:12px"></i>Competition</button>
+  <button class="nav-btn" onclick="showPage('log',this)"><i class="ti ti-clipboard" style="font-size:12px"></i>Log</button>
+  <button class="nav-btn" onclick="showPage('parametres',this)"><i class="ti ti-settings" style="font-size:12px"></i>Parametres</button>
+</div>
+
+<!-- PAGE HABITUDES -->
+<div class="page visible" id="p-habitudes">
+  <div class="weekly-banner" id="weeklyBanner" style="display:none">
+    <i class="ti ti-calendar-week" style="font-size:16px;color:var(--green);flex-shrink:0"></i>
+    <div style="flex:1;font-size:12px;color:var(--green);line-height:1.5" id="weeklyText"></div>
+    <span class="pill" id="weeklyGrade" style="background:var(--green-light);color:var(--green);border:0.5px solid var(--green)"></span>
+  </div>
+  <div class="sec-title"><i class="ti ti-sun" style="font-size:12px;color:var(--amber)"></i>Routine matin</div>
+  <div id="habitsMatin"></div>
+  <div class="sec-title" style="margin-top:10px"><i class="ti ti-moon" style="font-size:12px;color:var(--purple)"></i>Routine soir</div>
+  <div id="habitsSoir"></div>
+  <div style="background:var(--bg3);border-radius:var(--radius-sm);padding:10px 12px;margin-top:6px">
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:5px">
+      <span><i class="ti ti-flame" style="font-size:12px;color:var(--purple);margin-right:4px"></i>Volonte du jour</span>
+      <span style="color:var(--purple);font-weight:500" id="volLabel">0 / 6</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="volFill" style="background:var(--purple);width:0%"></div></div>
+  </div>
+</div>
+
+<!-- PAGE QUETES -->
+<div class="page" id="p-quetes">
+  <div id="questContainer"></div>
+</div>
+
+<!-- PAGE HISTOIRE -->
+<div class="page" id="p-histoire">
+  <div id="storyContainer"></div>
+</div>
+
+<!-- PAGE INVENTAIRE -->
+<div class="page" id="p-inventaire">
+  <div id="inventaireContainer"></div>
+</div>
+
+<!-- PAGE SPOKES -->
+<div class="page" id="p-spokes">
+  <div id="spokesContainer"></div>
+</div>
+
+<!-- PAGE PALIERS -->
+<div class="page" id="p-paliers">
+  <div id="paliersContainer"></div>
+</div>
+
+<!-- PAGE ACHIEVEMENTS -->
+<div class="page" id="p-achievements">
+  <div id="achContainer"></div>
+</div>
+
+<!-- PAGE COMPETITION -->
+<div class="page" id="p-competition">
+  <div id="competitionContainer"></div>
+</div>
+
+<!-- PAGE LOG -->
+<div class="page" id="p-log">
+  <div class="sec-title"><i class="ti ti-clipboard" style="font-size:12px"></i>Daily log</div>
+  <div class="card">
+    <div class="log-row">
+      <span class="log-label"><i class="ti ti-apple"></i> Repas</span>
+      <div class="log-opts">
+        <button class="log-btn" data-g="repas" data-v="good" data-c="sel-good">Equilibre</button>
+        <button class="log-btn" data-g="repas" data-v="mid" data-c="sel-mid">Passable</button>
+        <button class="log-btn" data-g="repas" data-v="bad" data-c="sel-bad">Mauvais</button>
+      </div>
+    </div>
+    <div class="log-row">
+      <span class="log-label"><i class="ti ti-droplet"></i> Hydratation</span>
+      <div class="log-opts">
+        <button class="log-btn" data-g="hydra" data-v="good" data-c="sel-good">Bonne</button>
+        <button class="log-btn" data-g="hydra" data-v="bad" data-c="sel-bad">Insuffisante</button>
+      </div>
+    </div>
+    <div class="log-row">
+      <span class="log-label"><i class="ti ti-moon"></i> Sommeil (h)</span>
+      <div class="log-opts">
+        <input type="number" class="log-input" id="sleepInput" min="3" max="12" step="0.5" placeholder="7.5">
+      </div>
+    </div>
+    <div class="log-row">
+      <span class="log-label"><i class="ti ti-brain"></i> Mental</span>
+      <div class="log-opts">
+        <button class="log-btn" data-g="mental" data-v="good" data-c="sel-good">Au top</button>
+        <button class="log-btn" data-g="mental" data-v="mid" data-c="sel-mid">Fatigue</button>
+        <button class="log-btn" data-g="mental" data-v="bad" data-c="sel-bad">Epuise</button>
+      </div>
+    </div>
+  </div>
+  <button class="btn-primary" id="validateBtn"><i class="ti ti-check" style="font-size:14px;margin-right:5px"></i>Valider la journee et gagner XP + Spokes</button>
+</div>
+
+<!-- PAGE PARAMETRES -->
+<div class="page" id="p-parametres">
+  <div class="sec-title"><i class="ti ti-user" style="font-size:12px"></i>Profil</div>
+  <div class="card">
+    <div class="param-row">
+      <div><div class="param-label">Prenom</div></div>
+      <input type="text" class="param-input" id="paramName" value="Suliman" style="width:130px;text-align:left">
+    </div>
+    <div class="param-row">
+      <div><div class="param-label">Vue</div><div class="param-sub">Basculer entre PC et mobile</div></div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <i class="ti ti-device-desktop" style="font-size:14px;color:var(--text2)"></i>
+        <div class="toggle" id="viewToggle" onclick="toggleView()"><div class="toggle-dot"></div></div>
+        <i class="ti ti-device-mobile" style="font-size:14px;color:var(--text2)"></i>
+      </div>
+    </div>
+  </div>
+  <div class="sec-title" style="margin-top:8px"><i class="ti ti-piggy-bank" style="font-size:12px;color:var(--green)"></i>Epargne</div>
+  <div class="card">
+    <div class="param-row"><div><div class="param-label">Virement fixe mensuel</div><div class="param-sub">Montant minimum chaque mois</div></div><input type="number" class="param-input" id="paramEpargneFixe" value="50">€</div>
+    <div class="param-row"><div><div class="param-label">Bonus streak 7j</div></div><input type="number" class="param-input" id="paramBonus7" value="20">€</div>
+    <div class="param-row"><div><div class="param-label">Bonus 80%+ quetes</div></div><input type="number" class="param-input" id="paramBonus80" value="15">€</div>
+    <div class="param-row"><div><div class="param-label">Bonus habitudes 6/6</div></div><input type="number" class="param-input" id="paramBonusHab" value="10">€</div>
+    <div class="param-row"><div><div class="param-label">Bonus daily log complet</div></div><input type="number" class="param-input" id="paramBonusLog" value="5">€</div>
+    <button class="btn-green" style="margin-top:8px;width:100%" onclick="saveParams()">Enregistrer les parametres</button>
+  </div>
+  <div class="sec-title" style="margin-top:8px"><i class="ti ti-brand-strava" style="font-size:12px;color:var(--coral)"></i>Strava</div>
+  <div class="card">
+    <div class="param-row"><div><div class="param-label">Seuil velo</div></div><input type="number" class="param-input" id="paramVelo" value="10"> km</div>
+    <div class="param-row"><div><div class="param-label">Seuil trail</div></div><input type="number" class="param-input" id="paramTrail" value="8"> km</div>
+    <div class="param-row"><div><div class="param-label">Seuil running</div></div><input type="number" class="param-input" id="paramRunning" value="5"> km</div>
+    <div class="param-row"><div><div class="param-label">Connexion Strava</div><div class="param-sub">Validation automatique des quetes</div></div><button class="btn-outline" style="border-color:var(--coral);color:var(--coral)">Connecter Strava</button></div>
+  </div>
+  <div class="sec-title" style="margin-top:8px"><i class="ti ti-database" style="font-size:12px;color:var(--text3)"></i>Donnees</div>
+  <div class="card">
+    <div class="param-row"><div><div class="param-label">Firebase</div><div class="param-sub">Synchronisation cloud PC ↔ Mobile</div></div><span style="font-size:11px" id="firebaseStatus">Non connecte</span></div>
+    <div id="fbLoginSection">
+      <div class="param-row"><div><div class="param-label">Email</div></div><input type="email" id="fbEmail" placeholder="ton@email.com" style="width:180px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:5px 8px;font-size:12px;color:var(--text);background:var(--bg3)"></div>
+      <div class="param-row"><div><div class="param-label">Mot de passe</div></div><input type="password" id="fbPassword" placeholder="••••••••" style="width:180px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:5px 8px;font-size:12px;color:var(--text);background:var(--bg3)"></div>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button class="btn-green" onclick="fbLogin()" style="flex:1">Se connecter</button>
+        <button class="btn-outline" onclick="fbRegister()" style="flex:1">Creer un compte</button>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px">Cree un compte pour synchroniser ta progression entre tous tes appareils.</div>
+    </div>
+    <div id="fbLogoutSection" style="display:none;align-items:center;gap:8px;margin-top:6px">
+      <button class="btn-green" onclick="saveToFirebase()" style="flex:1"><i class="ti ti-cloud-upload" style="font-size:12px;margin-right:3px"></i>Sauvegarder sur le cloud</button>
+      <button class="btn-outline" onclick="fbLogout()"><i class="ti ti-logout" style="font-size:12px"></i></button>
+    </div>
+    <div class="param-row"><div><div class="param-label">Exporter la progression</div><div class="param-sub">Telecharger une sauvegarde JSON</div></div><button class="btn-outline" onclick="exportData()"><i class="ti ti-download" style="font-size:12px;margin-right:3px"></i>Exporter JSON</button></div>
+    <div class="param-row"><div><div class="param-label">Importer une sauvegarde</div><div class="param-sub">Restaurer depuis un fichier JSON</div></div><div style="display:flex;align-items:center;gap:8px"><input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)"><button class="btn-outline" onclick="document.getElementById('importFile').click()"><i class="ti ti-upload" style="font-size:12px;margin-right:3px"></i>Importer JSON</button></div></div>
+    <div class="param-row"><div><div class="param-label">Reinitialiser</div><div class="param-sub">Remet a zero toute la progression</div></div><button class="btn-red" id="resetBtn2"><i class="ti ti-trash" style="font-size:12px;margin-right:3px"></i>Reset complet</button></div>
+  </div>
+</div>
+
+</div><!-- end .app -->
+<script>
+// ============================================================
+// CONSTANTES & DONNÉES
+// ============================================================
+const SAVE_KEY = 'suliman_rpg_v1';
+const SET_DURATION = 14;
+const MAX_LVL = 160;
+const PRESTIGE_LVL = 60;
+
+const CLASSES = [
+  {min:1,cap:29,name:'Apprenti',next:'Combattant',bg:'rgba(136,135,128,0.15)',color:'#B4B2A9',bar:'#888780',desc:'Debut du voyage'},
+  {min:30,cap:59,name:'Combattant',next:'Guerrier',bg:'rgba(29,158,117,0.15)',color:'#5DCAA5',bar:'#1D9E75',desc:'La discipline s\'installe'},
+  {min:60,cap:119,name:'Guerrier',next:'Champion',bg:'rgba(123,111,232,0.15)',color:'#7B6FE8',bar:'#7B6FE8',desc:'La force devient naturelle'},
+  {min:120,cap:159,name:'Champion',next:'Legende',bg:'rgba(216,90,48,0.15)',color:'#F0997B',bar:'#D85A30',desc:'La legende prend forme'},
+  {min:160,cap:160,name:'Legende',next:null,bg:'rgba(239,159,39,0.15)',color:'#EF9F27',bar:'#EF9F27',desc:'Le sommet est atteint'},
+];
+
+const PRESTIGE_BADGES = [
+  {rank:0,ring:'none',ring2:'none',stars:0,label:''},
+  {rank:1,ring:'#B4B2A9',ring2:'none',stars:1,label:'Maitre I ✦',starColor:'#888780'},
+  {rank:2,ring:'#EF9F27',ring2:'none',stars:2,label:'Maitre II ✦✦',starColor:'#EF9F27'},
+  {rank:3,ring:'#85B7EB',ring2:'#85B7EB',stars:3,label:'Maitre III ✦✦✦',starColor:'#378ADD'},
+  {rank:4,ring:'#ED93B1',ring2:'#D4537E',stars:4,label:'Maitre IV ✦✦✦✦',starColor:'#D4537E'},
+  {rank:5,ring:'#EF9F27',ring2:'#EF9F27',stars:5,label:'Maitre V ✦✦✦✦✦',starColor:'#EF9F27',pulse:true},
+];
+
+const CQ_CAPS = [29,59,119,159];
+const CQ_META = [
+  {label:'1 semaine',diff:'Difficile',rank:'I'},
+  {label:'2 semaines',diff:'Tres difficile',rank:'II'},
+  {label:'3 semaines',diff:'Extreme',rank:'III'},
+  {label:'4 semaines',diff:'Legendaire',rank:'IV'},
+];
+
+const PALIERS = [
+  {lvl:30,name:'Fer Forge',color:'#1D9E75',bg:'rgba(29,158,117,0.15)',border:'#5DCAA5',title:'Titre : Fer Forge',bonus:'+5% XP musculation',
+   quests:[{id:'p30a',label:'Realiser 3 seances de muscu dans la semaine',xp:120,stat:'force',pts:3,spokes:60},{id:'p30b',label:'Tenir un journal d\'entrainement 7 jours',xp:80,stat:'volo',pts:2,spokes:40}]},
+  {lvl:60,name:'Guerrier de l\'Aube',color:'#7B6FE8',bg:'rgba(123,111,232,0.15)',border:'#7B6FE8',title:'Titre : Guerrier de l\'Aube',bonus:'Journees 5/5 habitudes comptent double',
+   quests:[{id:'p60a',label:'7 levers avant 6h consecutifs',xp:150,stat:'volo',pts:3,spokes:75},{id:'p60b',label:'Organiser une sortie velo ou escalade',xp:100,stat:'recup',pts:2,spokes:50},{id:'p60c',label:'21 jours de streak complet',xp:200,stat:'volo',pts:4,spokes:100}]},
+  {lvl:120,name:'Corps & Ame',color:'#D85A30',bg:'rgba(216,90,48,0.15)',border:'#F0997B',title:'Titre : Corps & Ame',bonus:'+1 stat bonus par semaine a 80%',
+   quests:[{id:'p120a',label:'Realiser un defi physique hors zone de confort',xp:200,stat:'force',pts:4,spokes:100},{id:'p120b',label:'30 jours consecutifs de douche froide',xp:180,stat:'volo',pts:4,spokes:90},{id:'p120c',label:'Lire 5 livres de developpement personnel',xp:150,stat:'volo',pts:3,spokes:75},{id:'p120d',label:'Suivre un plan nutritionnel pendant 1 mois',xp:160,stat:'vita',pts:3,spokes:80}]},
+  {lvl:160,name:'Indomptable',color:'#EF9F27',bg:'rgba(239,159,39,0.15)',border:'#EF9F27',title:'Titre : Suliman l\'Indomptable',bonus:'Tous les bonus actifs + mode Maitre',
+   quests:[{id:'p160a',label:'Maintenir 4 stats au-dessus de 50 pendant 30 jours',xp:300,stat:'volo',pts:5,spokes:150},{id:'p160b',label:'Realiser une aventure sportive marquante',xp:250,stat:'force',pts:5,spokes:125},{id:'p160c',label:'Mentorer quelqu\'un sur ses habitudes 1 mois',xp:200,stat:'volo',pts:4,spokes:100}]},
+];
+
+const HABITS_MATIN = [
+  {id:'h1',icon:'ti-alarm',name:'Reveil avant 6h',xp:30,spokes:15,stat:'volo'},
+  {id:'h2',icon:'ti-droplet',name:'Douche froide',xp:25,spokes:12,stat:'volo'},
+  {id:'h3',icon:'ti-shield',name:'No fap',xp:20,spokes:10,stat:'volo'},
+  {id:'h4',icon:'ti-book',name:'Lecture (15 min)',xp:20,spokes:10,stat:'volo'},
+  {id:'h5',icon:'ti-brain',name:'Meditation (10 min)',xp:25,spokes:12,stat:'volo'},
+];
+const HABITS_SOIR = [
+  {id:'h6',icon:'ti-calendar-check',name:'Planification du lendemain',xp:20,spokes:10,stat:'volo'},
+];
+const ALL_HABITS = [...HABITS_MATIN, ...HABITS_SOIR];
+
+const ACHIEVEMENTS = [
+  // Progression
+  {id:'a1',cat:'progression',icon:'ti-footprint',ico_bg:'rgba(123,111,232,0.2)',ico_color:'#7B6FE8',name:'Premier Pas',desc:'Atteindre le niveau 10',spokes:200,check:g=>g.lvl>=10},
+  {id:'a2',cat:'progression',icon:'ti-shield',ico_bg:'rgba(29,158,117,0.2)',ico_color:'#1D9E75',name:'Eveil',desc:'Changer de classe pour la premiere fois (niv. 30)',spokes:500,check:g=>g.lvl>=30},
+  {id:'a3',cat:'progression',icon:'ti-sword',ico_bg:'rgba(123,111,232,0.2)',ico_color:'#7B6FE8',name:'Guerrier Ne',desc:'Atteindre le niveau 60',spokes:750,check:g=>g.lvl>=60},
+  {id:'a4',cat:'progression',icon:'ti-crown',ico_bg:'rgba(216,90,48,0.2)',ico_color:'#D85A30',name:'Champion',desc:'Atteindre le niveau 120',spokes:1500,check:g=>g.lvl>=120},
+  {id:'a5',cat:'progression',icon:'ti-star',ico_bg:'rgba(239,159,39,0.2)',ico_color:'#EF9F27',name:'Legende Vivante',desc:'Atteindre le niveau 160',spokes:5000,check:g=>g.lvl>=160},
+  {id:'a6',cat:'progression',icon:'ti-crown',ico_bg:'rgba(239,159,39,0.2)',ico_color:'#EF9F27',name:'Eveil Maitre',desc:'Activer le mode Maitre pour la premiere fois',spokes:3000,check:g=>g.masterCount>=1},
+  // Discipline
+  {id:'a7',cat:'discipline',icon:'ti-calendar-week',ico_bg:'rgba(239,159,39,0.2)',ico_color:'#EF9F27',name:'Semaine de Fer',desc:'7 jours de streak complet',spokes:300,check:g=>g.streak>=7},
+  {id:'a8',cat:'discipline',icon:'ti-calendar-month',ico_bg:'rgba(239,159,39,0.2)',ico_color:'#EF9F27',name:'Mois de Fer',desc:'30 jours de streak consecutifs',spokes:750,check:g=>g.streak>=30},
+  {id:'a9',cat:'discipline',icon:'ti-calendar',ico_bg:'rgba(239,159,39,0.2)',ico_color:'#EF9F27',name:'Double Mois',desc:'60 jours de streak',spokes:1200,check:g=>g.streak>=60},
+  {id:'a10',cat:'discipline',icon:'ti-calendar',ico_bg:'rgba(239,159,39,0.2)',ico_color:'#EF9F27',name:'Trimestre',desc:'90 jours de streak',spokes:2000,check:g=>g.streak>=90},
+  {id:'a11',cat:'discipline',icon:'ti-calendar',ico_bg:'rgba(239,159,39,0.2)',ico_color:'#EF9F27',name:'Semestre',desc:'180 jours de streak',spokes:4000,check:g=>g.streak>=180},
+  {id:'a12',cat:'discipline',icon:'ti-flame',ico_bg:'rgba(239,159,39,0.2)',ico_color:'#EF9F27',name:'Centurion de l\'Annee',desc:'365 jours de streak',spokes:10000,check:g=>g.streak>=365},
+  // Performance
+  {id:'a13',cat:'performance',icon:'ti-sword',ico_bg:'rgba(29,158,117,0.2)',ico_color:'#1D9E75',name:'Premier Sang',desc:'Valider ta premiere quete de classe',spokes:250,check:g=>Object.keys(g.classQuestsDone||{}).length>=1},
+  {id:'a14',cat:'performance',icon:'ti-book-2',ico_bg:'rgba(123,111,232,0.2)',ico_color:'#7B6FE8',name:'Conquerant',desc:'Completer une epopee complete',spokes:1000,check:g=>(g.storyChaptersDone||[]).length>=10},
+  {id:'a15',cat:'performance',icon:'ti-shield-check',ico_bg:'rgba(136,135,128,0.2)',ico_color:'#B4B2A9',name:'Collectionneur',desc:'Posseder un set complet Standard',spokes:500,check:g=>hasFullSet(g,'std')},
+  {id:'a16',cat:'performance',icon:'ti-diamond',ico_bg:'rgba(133,183,235,0.2)',ico_color:'#85B7EB',name:'Seigneur',desc:'Posseder un set complet Elite',spokes:2000,check:g=>hasFullSet(g,'elite')},
+  {id:'a17',cat:'performance',icon:'ti-star',ico_bg:'rgba(239,159,39,0.2)',ico_color:'#EF9F27',name:'Legende de l\'Equipement',desc:'Posseder un set complet Legendaire',spokes:5000,check:g=>hasFullSet(g,'leg')},
+  // Finances
+  {id:'a18',cat:'finances',icon:'ti-coin',ico_bg:'rgba(239,159,39,0.2)',ico_color:'#EF9F27',name:'Premiere Piece',desc:'Accumuler 1 000 Spokes',spokes:100,check:g=>g.spokesTotal>=1000},
+  {id:'a19',cat:'finances',icon:'ti-piggy-bank',ico_bg:'rgba(29,158,117,0.2)',ico_color:'#1D9E75',name:'Epargnant',desc:'Epargner 1 000€ au total',spokes:1000,check:g=>(g.epargneTotal||0)>=1000},
+  {id:'a20',cat:'finances',icon:'ti-building-bank',ico_bg:'rgba(29,158,117,0.2)',ico_color:'#1D9E75',name:'Batisseur',desc:'Epargner 2 000€ au total',spokes:2500,check:g=>(g.epargneTotal||0)>=2000},
+];
+
+const EQUIPMENT_SETS = [
+  {id:'velo',name:'Set Velo',icon:'ti-bike',color:'#7B6FE8',bg:'rgba(123,111,232,0.15)',
+   pieces:[
+    {id:'velo_casque',name:'Casque',icon:'ti-hard-hat',
+     std:{price:3000,bonus:'+5% XP velo',stat:'xp_velo',val:5},elite:{price:9000,bonus:'+10% XP velo',stat:'xp_velo',val:10},leg:{price:24000,bonus:'+20% XP velo',stat:'xp_velo',val:20}},
+    {id:'velo_plastron',name:'Plastron',icon:'ti-shield',
+     std:{price:3500,bonus:'+2 Recup',stat:'recup',val:2},elite:{price:10500,bonus:'+4 Recup',stat:'recup',val:4},leg:{price:28000,bonus:'+8 Recup',stat:'recup',val:8}},
+    {id:'velo_pantalon',name:'Pantalon',icon:'ti-shirt',
+     std:{price:2500,bonus:'+2 Vitalite',stat:'vita',val:2},elite:{price:7500,bonus:'+4 Vitalite',stat:'vita',val:4},leg:{price:20000,bonus:'+8 Vitalite',stat:'vita',val:8}},
+    {id:'velo_bottes',name:'Bottes',icon:'ti-shoe',
+     std:{price:3000,bonus:'+5% XP sport',stat:'xp_sport',val:5},elite:{price:9000,bonus:'+10% XP sport',stat:'xp_sport',val:10},leg:{price:24000,bonus:'+20% XP sport',stat:'xp_sport',val:20}},
+   ],
+   setBonus:{std:{label:'+15% XP toutes activites +5 Recup',xp:15,recup:5},elite:{label:'+30% XP toutes activites +10 Recup',xp:30,recup:10},leg:{label:'+60% XP toutes activites +20 Recup',xp:60,recup:20}}},
+  {id:'escalade',name:'Set Escalade',icon:'ti-mountain',color:'#1D9E75',bg:'rgba(29,158,117,0.15)',
+   pieces:[
+    {id:'esc_casque',name:'Casque',icon:'ti-hard-hat',
+     std:{price:2500,bonus:'+2 Force',stat:'force',val:2},elite:{price:7500,bonus:'+4 Force',stat:'force',val:4},leg:{price:20000,bonus:'+8 Force',stat:'force',val:8}},
+    {id:'esc_baudrier',name:'Baudrier',icon:'ti-shield',
+     std:{price:3000,bonus:'+5% XP mental',stat:'xp_mental',val:5},elite:{price:9000,bonus:'+10% XP mental',stat:'xp_mental',val:10},leg:{price:24000,bonus:'+20% XP mental',stat:'xp_mental',val:20}},
+    {id:'esc_pantalon',name:'Pantalon',icon:'ti-shirt',
+     std:{price:2500,bonus:'+2 Volonte',stat:'volo',val:2},elite:{price:7500,bonus:'+4 Volonte',stat:'volo',val:4},leg:{price:20000,bonus:'+8 Volonte',stat:'volo',val:8}},
+    {id:'esc_chaussons',name:'Chaussons',icon:'ti-shoe',
+     std:{price:2000,bonus:'+5% XP habitudes',stat:'xp_hab',val:5},elite:{price:6000,bonus:'+10% XP habitudes',stat:'xp_hab',val:10},leg:{price:16000,bonus:'+20% XP habitudes',stat:'xp_hab',val:20}},
+   ],
+   setBonus:{std:{label:'+10% XP toutes activites +5 Force +5 Volonte',xp:10,force:5,volo:5},elite:{label:'+20% XP +10 Force +10 Volonte',xp:20,force:10,volo:10},leg:{label:'+40% XP +20 Force +20 Volonte +1 stat/jour',xp:40,force:20,volo:20}}},
+  {id:'muscu',name:'Set Muscu',icon:'ti-barbell',color:'#D85A30',bg:'rgba(216,90,48,0.15)',
+   pieces:[
+    {id:'mus_debardeur',name:'Debardeur',icon:'ti-shirt',
+     std:{price:2000,bonus:'+3 Force',stat:'force',val:3},elite:{price:6000,bonus:'+6 Force',stat:'force',val:6},leg:{price:16000,bonus:'+12 Force',stat:'force',val:12}},
+    {id:'mus_short',name:'Short',icon:'ti-shirt',
+     std:{price:2000,bonus:'+2 Vitalite',stat:'vita',val:2},elite:{price:6000,bonus:'+4 Vitalite',stat:'vita',val:4},leg:{price:16000,bonus:'+8 Vitalite',stat:'vita',val:8}},
+    {id:'mus_ceinture',name:'Ceinture',icon:'ti-circle',
+     std:{price:3500,bonus:'+5% XP muscu',stat:'xp_muscu',val:5},elite:{price:10500,bonus:'+10% XP muscu',stat:'xp_muscu',val:10},leg:{price:28000,bonus:'+20% XP muscu',stat:'xp_muscu',val:20}},
+    {id:'mus_chaussures',name:'Chaussures',icon:'ti-shoe',
+     std:{price:2500,bonus:'+2 Force',stat:'force',val:2},elite:{price:7500,bonus:'+4 Force',stat:'force',val:4},leg:{price:20000,bonus:'+8 Force',stat:'force',val:8}},
+   ],
+   setBonus:{std:{label:'+20% XP muscu +10 Force',xp_muscu:20,force:10},elite:{label:'+40% XP muscu +20 Force',xp_muscu:40,force:20},leg:{label:'+80% XP muscu +40 Force',xp_muscu:80,force:40}}},
+  {id:'trail',name:'Set Trail',icon:'ti-run',color:'#E24B4A',bg:'rgba(226,75,74,0.15)',
+   pieces:[
+    {id:'trail_casque',name:'Casque/Visiere',icon:'ti-hard-hat',
+     std:{price:2000,bonus:'+5% XP trail & running',stat:'xp_trail',val:5},elite:{price:6000,bonus:'+10% XP trail & running',stat:'xp_trail',val:10},leg:{price:16000,bonus:'+20% XP trail & running',stat:'xp_trail',val:20}},
+    {id:'trail_veste',name:'Veste',icon:'ti-shirt',
+     std:{price:2500,bonus:'+2 Recup',stat:'recup',val:2},elite:{price:7500,bonus:'+4 Recup',stat:'recup',val:4},leg:{price:20000,bonus:'+8 Recup',stat:'recup',val:8}},
+    {id:'trail_cuissard',name:'Cuissard',icon:'ti-shirt',
+     std:{price:2000,bonus:'+2 Vitalite',stat:'vita',val:2},elite:{price:6000,bonus:'+4 Vitalite',stat:'vita',val:4},leg:{price:16000,bonus:'+8 Vitalite',stat:'vita',val:8}},
+    {id:'trail_chaussures',name:'Chaussures trail',icon:'ti-shoe',
+     std:{price:2500,bonus:'+5% XP sorties nature',stat:'xp_nature',val:5},elite:{price:7500,bonus:'+10% XP sorties nature',stat:'xp_nature',val:10},leg:{price:20000,bonus:'+20% XP sorties nature',stat:'xp_nature',val:20}},
+   ],
+   setBonus:{std:{label:'+15% XP endurance +5 Recup',xp:15,recup:5},elite:{label:'+30% XP endurance +10 Recup +5 Volonte',xp:30,recup:10,volo:5},leg:{label:'+60% XP endurance +20 Recup +15 Volonte',xp:60,recup:20,volo:15}}},
+];
+
+const SHOP_BUFFS = [
+  {id:'buff_jour',name:'Boost Journee',icon:'ti-flame',ico_bg:'rgba(29,158,117,0.2)',ico_color:'#1D9E75',desc:'+50% XP pendant 24h',price:500,xpBonus:50,days:1},
+  {id:'buff_semaine',name:'Boost Semaine',icon:'ti-rocket',ico_bg:'rgba(123,111,232,0.2)',ico_color:'#7B6FE8',desc:'+25% XP pendant 7 jours',price:2500,xpBonus:25,days:7},
+  {id:'buff_quinzaine',name:'Boost Quinzaine',icon:'ti-star',ico_bg:'rgba(123,111,232,0.2)',ico_color:'#7B6FE8',desc:'+15% XP pendant 14 jours',price:4000,xpBonus:15,days:14},
+];
+
+const SHOP_PROTECTIONS = [
+  {id:'prot_1',name:'Protection x1',icon:'ti-shield-check',ico_bg:'rgba(123,111,232,0.2)',ico_color:'#7B6FE8',desc:'Preserve ton streak si tu rates un jour',price:300,qty:1},
+  {id:'prot_3',name:'Protection x3',icon:'ti-shield-check',ico_bg:'rgba(123,111,232,0.2)',ico_color:'#7B6FE8',desc:'Pack economique',price:750,qty:3},
+  {id:'prot_7',name:'Protection x7',icon:'ti-shield-check',ico_bg:'rgba(123,111,232,0.2)',ico_color:'#7B6FE8',desc:'Pack longue duree',price:1500,qty:7},
+];
+
+const SHOP_REWARDS = [
+  {id:'rew_buffet',name:'Buffet a volonte',icon:'ti-tools',ico_bg:'rgba(216,90,48,0.15)',ico_color:'#D85A30',desc:'Plaisir gastronomique',price:2000},
+  {id:'rew_sortie_amis',name:'Sortie entre amis',icon:'ti-users',ico_bg:'rgba(216,90,48,0.15)',ico_color:'#D85A30',desc:'Bar, soiree...',price:3000},
+  {id:'rew_restaurant',name:'Restaurant',icon:'ti-tools',ico_bg:'rgba(216,90,48,0.15)',ico_color:'#D85A30',desc:'Bonne table',price:5000},
+  {id:'rew_achat20',name:'Achat 20€',icon:'ti-shopping-bag',ico_bg:'rgba(239,159,39,0.15)',ico_color:'#EF9F27',desc:'Objet de 20€',price:2000},
+  {id:'rew_achat50',name:'Achat 50€',icon:'ti-shopping-bag',ico_bg:'rgba(239,159,39,0.15)',ico_color:'#EF9F27',desc:'Objet de 50€',price:5000},
+  {id:'rew_achat100',name:'Achat 100€',icon:'ti-shopping-bag',ico_bg:'rgba(239,159,39,0.15)',ico_color:'#EF9F27',desc:'Objet de 100€',price:10000},
+  {id:'rew_achat200',name:'Achat 200€',icon:'ti-shopping-bag',ico_bg:'rgba(239,159,39,0.15)',ico_color:'#EF9F27',desc:'Objet de 200€',price:20000},
+  {id:'rew_achat500',name:'Achat 500€',icon:'ti-shopping-bag',ico_bg:'rgba(239,159,39,0.15)',ico_color:'#EF9F27',desc:'Objet de 500€',price:50000},
+  {id:'rew_achat1000',name:'Achat 1 000€',icon:'ti-shopping-bag',ico_bg:'rgba(239,159,39,0.15)',ico_color:'#EF9F27',desc:'Gros achat',price:100000},
+];
+
+const EQ_SLOTS = ['casque','plastron','pantalon','bottes'];
+
+const SET_PROMPT = `Tu es un generateur de quetes journalieres RPG pour Suliman : musculation PPL, velo descente/enduro/gravel, trail, running, escalade, habitudes (reveil 6h, douche froide, no fap, lecture, meditation, planification), gere Biketop (magasin velo, evenements). Genere un set de 10 quetes journalieres variees (5 sport/perso + 5 Biketop). Actions concretes et mesurables faisables en 1 journee. Reponds UNIQUEMENT en JSON sans backticks : {"set":"X","quetes":[{"id":"s1","label":"description","xp":40,"spokes":20,"stat":"force","type":"Sport"},{"id":"s2","label":"...","xp":35,"spokes":17,"stat":"volo","type":"Biketop"},...]} Types: Sport, Biketop, Mental, Habitude. Stats: force/recup/vita/volo. XP 20-80, spokes = xp/2.`;
+
+const STORY_PROMPT = `Tu es un narrateur RPG pour Suliman : musculation PPL, velo, trail, escalade, habitudes, gere Biketop. Genere une grande quete d'histoire epique mix sport+Biketop+dev perso. JSON sans backticks : {"titre":"...","description":"...","domaine":"Mix","recompense_finale":"...","xp_total":0,"chapitres":[{"titre":"...","description":"...","xp":150,"spokes":75,"taches":[{"label":"..."},...]},...]} 10 chapitres, 2-3 taches chacun.`;
+
+const CQ_PROMPT = `Quete de classe MMO farming pour Suliman (musculation PPL, velo, trail, escalade, habitudes, Biketop). Objectifs concrets et chiffres style farming. JSON sans backticks : {"titre":"...","objectifs":[{"label":"...","categorie":"Sport|Mental|Habitude|Biketop"},...]}`;
+
+const PALIER_QUEST_PROMPT = `Genere 3 quetes ambitieuses de palier pour Suliman (musculation PPL, velo, trail, escalade, habitudes, Biketop). JSON sans backticks : [{"label":"...","xp":120,"spokes":60,"stat":"force","pts":3},...] Stats: force/recup/vita/volo. XP: 80-300. spokes = xp/2.`;
+
+// ============================================================
+// ÉTAT GLOBAL
+// ============================================================
+const DEF = {
+  xp:0, lvl:1, isMaster:false, masterCount:0, streak:0, lastValidDate:'', lastSaveDate:'',
+  stats:{force:0,recup:0,vita:0,volo:0},
+  classQuests:{}, classQuestsDone:{}, classQuestsObjDone:{},
+  story:null, storyChaptersDone:[], storyTasksDone:{},
+  questSets:{}, currentSetIdx:0, setStartDate:null, questDoneDaily:{},
+  palierDone:[], aiQuestsByPalier:{}, aiQuestDoneIds:[],
+  inventory:{equipped:{casque:null,plastron:null,pantalon:null,bottes:null}, owned:{}},
+  spokes:0, spokesTotal:0, buffs:[], streakProtections:0,
+  epargneTotal:0, epargneHistory:[],
+  achievementsDone:[],
+  weeklyRecords:{xp:0,habits:0,quests:0,spokes:0,streak7:false},
+  weeklyStartDate:null,
+  params:{epargneFixe:50,bonus7:20,bonus80:15,bonusHab:10,bonusLog:5,veloKm:10,trailKm:8,runningKm:5,name:'Suliman'},
+};
+
+let G = JSON.parse(JSON.stringify(DEF));
+let habitDone = new Set();
+let questDone = new Set();
+let palierQuestDone = new Set();
+let aiQuestDone = new Set();
+let logState = {};
+let openChapter = null;
+let generatingSet = false;
+let generatingCQ = null;
+let generatingStory = false;
+let generatingPalier = null;
+
+// ============================================================
+// HELPERS
+// ============================================================
+function getClass(l){ for(let i=CLASSES.length-1;i>=0;i--){ if(l>=CLASSES[i].min) return CLASSES[i]; } return CLASSES[0]; }
+function xpForLvl(l,m){ return Math.round(100*Math.pow(1.08,l-1))*(m?2:1); }
+function totalXpTo(l,m){ let t=0; for(let i=1;i<l;i++) t+=xpForLvl(i,m); return t; }
+function isAtCap(){ return CQ_CAPS.includes(G.lvl) && !G.classQuestsDone[G.lvl]; }
+function capXP(){ if(isAtCap()){ const cap=totalXpTo(G.lvl,G.isMaster)+xpForLvl(G.lvl,G.isMaster)-1; if(G.xp>cap) G.xp=cap; } }
+function today(){ return new Date().toISOString().split('T')[0]; }
+function hasFullSet(g,rarity){
+  for(const s of EQUIPMENT_SETS){
+    const allOwned = s.pieces.every(p => {
+      const owned = (g.inventory?.owned||{})[p.id];
+      if(rarity==='std') return owned==='std'||owned==='elite'||owned==='leg';
+      if(rarity==='elite') return owned==='elite'||owned==='leg';
+      if(rarity==='leg') return owned==='leg';
+      return false;
+    });
+    if(allOwned) return true;
+  }
+  return false;
+}
+function getActiveBuffBonus(){
+  const now = Date.now();
+  let bonus = 0;
+  (G.buffs||[]).forEach(b=>{ if(b.expiry>now) bonus+=b.xpBonus; });
+  return bonus;
+}
+function getEquipBonus(){
+  let xpBonus=0, statBonus={force:0,recup:0,vita:0,volo:0};
+  const eq = G.inventory?.equipped||{};
+  Object.values(eq).forEach(item=>{
+    if(!item) return;
+    const [setId,pieceId,rarity] = item.split('|');
+    const set = EQUIPMENT_SETS.find(s=>s.id===setId);
+    if(!set) return;
+    const piece = set.pieces.find(p=>p.id===pieceId);
+    if(!piece||!piece[rarity]) return;
+    const b=piece[rarity];
+    if(b.stat==='recup') statBonus.recup+=b.val;
+    if(b.stat==='force') statBonus.force+=b.val;
+    if(b.stat==='vita') statBonus.vita+=b.val;
+    if(b.stat==='volo') statBonus.volo+=b.val;
+  });
+  const slots=['casque','plastron','pantalon','bottes'];
+  EQUIPMENT_SETS.forEach(set=>{
+    const equipped = set.pieces.map(p=>{
+      const eqVal = Object.values(eq).find(e=>e&&e.startsWith(set.id+'|'+p.id+'|'));
+      return eqVal;
+    });
+    if(equipped.every(e=>e)){
+      const rarities = equipped.map(e=>e.split('|')[2]);
+      const allLeg = rarities.every(r=>r==='leg');
+      const allElite = rarities.every(r=>r==='elite'||r==='leg');
+      const allStd = true;
+      const bonus = allLeg ? set.setBonus.leg : allElite ? set.setBonus.elite : set.setBonus.std;
+      if(bonus.xp) xpBonus += bonus.xp;
+      if(bonus.recup) statBonus.recup += bonus.recup;
+      if(bonus.force) statBonus.force += bonus.force;
+      if(bonus.volo) statBonus.volo += bonus.volo;
+    }
+  });
+  return {xpBonus, statBonus};
+}
+
+// ============================================================
+// SAUVEGARDE LOCALE
+// ============================================================
+function saveLocal(){
+  try{
+    const data = {...G, habitDone:[...habitDone], questDone:[...questDone], palierQuestDone:[...palierQuestDone], aiQuestDone:[...aiQuestDone], logState };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+    const now = new Date();
+    G.lastSaveDate = now.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    setSaveStatus('Sauvegarde le '+G.lastSaveDate, true);
+  } catch(e){ setSaveStatus('Erreur sauvegarde', false); }
+}
+
+function loadLocal(){
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(raw){
+      const s = JSON.parse(raw);
+      // Merge proprement pour ne pas perdre les nouvelles clés de DEF
+      G = Object.assign(JSON.parse(JSON.stringify(DEF)), s);
+      habitDone = new Set(s.habitDone||[]);
+      questDone = new Set(s.questDone||[]);
+      palierQuestDone = new Set(s.palierQuestDone||[]);
+      aiQuestDone = new Set(s.aiQuestDone||[]);
+      logState = s.logState||{};
+      if(G.params) applyParams();
+      setSaveStatus(G.lastSaveDate?'Derniere sauvegarde : '+G.lastSaveDate:'Nouvelle partie', !!G.lastSaveDate);
+    } else {
+      setSaveStatus('Nouvelle partie', false);
+    }
+  } catch(e){ 
+    console.error('Load error:', e);
+    G = JSON.parse(JSON.stringify(DEF));
+    setSaveStatus('Nouvelle partie', false); 
+  }
+}
+
+function setSaveStatus(msg, ok){
+  const el = document.getElementById('saveStatus');
+  el.textContent = msg;
+  el.className = 'save-status' + (ok?' ok':'');
+}
+
+function exportData(){
+  const data = JSON.stringify({...G, habitDone:[...habitDone], questDone:[...questDone], palierQuestDone:[...palierQuestDone], aiQuestDone:[...aiQuestDone], logState}, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='suliman_rpg_backup.json'; a.click();
+  showToast('Sauvegarde exportee !', 'green-t');
+}
+
+function importData(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const s = JSON.parse(e.target.result);
+      if(!confirm('Importer cette sauvegarde ? Ta progression actuelle sera remplacee.')) return;
+      G = Object.assign(JSON.parse(JSON.stringify(DEF)), s);
+      habitDone = new Set(s.habitDone||[]);
+      questDone = new Set(s.questDone||[]);
+      palierQuestDone = new Set(s.palierQuestDone||[]);
+      aiQuestDone = new Set(s.aiQuestDone||[]);
+      logState = s.logState||{};
+      openChapter = null;
+      saveLocal();
+      if(G.params) applyParams();
+      renderUI();
+      renderHabitudes();
+      renderCQBanner();
+      if(document.getElementById('p-quetes').classList.contains('visible')) renderQuetes();
+      if(document.getElementById('p-paliers').classList.contains('visible')) renderPaliers();
+      if(document.getElementById('p-achievements').classList.contains('visible')) renderAchievements();
+      if(document.getElementById('p-histoire').classList.contains('visible')) renderStory();
+      if(document.getElementById('p-inventaire').classList.contains('visible')) renderInventaire();
+      if(document.getElementById('p-spokes').classList.contains('visible')) renderSpokes();
+      if(document.getElementById('p-competition').classList.contains('visible')) renderCompetition();
+      showToast('Sauvegarde importee avec succes !', 'gold');
+      input.value = '';
+    } catch(err){
+      showToast('Erreur : fichier invalide', 'normal');
+      console.error(err);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ============================================================
+// XP & NIVEAU
+// ============================================================
+function addXP(amount){
+  const buffBonus = getActiveBuffBonus();
+  const equipBonus = getEquipBonus().xpBonus;
+  const totalBonus = buffBonus + equipBonus;
+  if(totalBonus>0) amount = Math.round(amount * (1 + totalBonus/100));
+  if(G.isMaster) amount = Math.round(amount/2);
+  G.xp += amount;
+  capXP();
+  let leveled=false, classChanged=false;
+  const prevLvl = G.lvl;
+  while(G.lvl<MAX_LVL && !isAtCap()){
+    if(G.xp >= totalXpTo(G.lvl,G.isMaster)+xpForLvl(G.lvl,G.isMaster)){ G.lvl++; leveled=true; if(getClass(G.lvl).name!==getClass(prevLvl).name) classChanged=true; }
+    else break;
+  }
+  if(isAtCap() && !G.classQuests[G.lvl]) generateCQ(G.lvl);
+  if(G.lvl>=MAX_LVL) G.xp=totalXpTo(MAX_LVL,G.isMaster);
+  if(leveled){
+    const p = PALIERS.find(x=>x.lvl===G.lvl);
+    if(p) showToast('Palier '+G.lvl+' debloque ! '+p.name,'gold');
+    else if(classChanged) showToast('Nouvelle classe : '+getClass(G.lvl).name+' — Niv. '+G.lvl,'gold');
+    else if(isAtCap()) showToast('Niv. cap '+G.lvl+' ! Complete la quete de classe.','gold');
+    else showToast('Niveau '+G.lvl+' atteint !', 'normal');
+  }
+  return amount;
+}
+
+function addStats(sg){
+  const m = G.isMaster ? 0.5 : 1;
+  const eb = getEquipBonus().statBonus;
+  G.stats.force += Math.round((sg.force+0)*m) + eb.force;
+  G.stats.recup += Math.round((sg.recup+0)*m) + eb.recup;
+  G.stats.vita += Math.round((sg.vita+0)*m);
+  G.stats.volo += Math.round((sg.volo+0)*m);
+}
+
+function addSpokes(amount){
+  if(G.isMaster) amount = Math.round(amount/2);
+  G.spokes += amount;
+  G.spokesTotal = (G.spokesTotal||0) + amount;
+}
+
+// ============================================================
+// ACHIEVEMENTS
+// ============================================================
+function checkAchievements(){
+  ACHIEVEMENTS.forEach(a=>{
+    if(!(G.achievementsDone||[]).includes(a.id) && a.check(G)){
+      G.achievementsDone = [...(G.achievementsDone||[]), a.id];
+      G.spokes += a.spokes;
+      G.spokesTotal = (G.spokesTotal||0) + a.spokes;
+      showToast('Achievement debloque : '+a.name+' +'+a.spokes+' ⚙','gold');
+    }
+  });
+}
+
+// ============================================================
+// RENDER UI PRINCIPAL
+// ============================================================
+function renderUI(){
+  capXP();
+  const cl = getClass(G.lvl);
+  const needed = xpForLvl(G.lvl,G.isMaster);
+  const inLvl = Math.max(G.xp - totalXpTo(G.lvl,G.isMaster), 0);
+  const pct = Math.min(Math.round(inLvl/needed*100),100);
+  document.getElementById('xpBar').style.width = pct+'%';
+  document.getElementById('xpBar').style.background = cl.bar;
+  document.getElementById('xpCur').textContent = Math.round(inLvl);
+  document.getElementById('xpNext').textContent = Math.round(needed);
+  document.getElementById('lvlDisp').textContent = G.lvl+(G.isMaster?' — Maitre':'');
+  const cb = document.getElementById('classBadge');
+  cb.textContent = cl.name;
+  cb.style.background = cl.bg;
+  cb.style.color = cl.color;
+  cb.style.border = '0.5px solid '+cl.color;
+  document.getElementById('classDesc').textContent = cl.desc;
+  const hint = document.getElementById('classHint');
+  if(isAtCap()){ hint.style.color='#E24B4A'; hint.textContent='XP cap — quete de classe obligatoire'; }
+  else if(!G.isMaster){ const n=G.lvl<30?30:G.lvl<60?60:G.lvl<120?120:G.lvl<160?160:null; if(n){ hint.style.color=cl.bar; hint.textContent='Prochain palier niv. '+n; } else hint.textContent=''; }
+  else{ hint.style.color='var(--amber)'; hint.textContent='Mode Maitre — gains x0.5'; }
+  document.getElementById('statForce').textContent = G.stats.force;
+  document.getElementById('statRecup').textContent = G.stats.recup;
+  document.getElementById('statVita').textContent = G.stats.vita;
+  document.getElementById('statVolo').textContent = G.stats.volo;
+  document.getElementById('barForce').style.width = Math.min(G.stats.force*1.5,100)+'%';
+  document.getElementById('barRecup').style.width = Math.min(G.stats.recup*1.5,100)+'%';
+  document.getElementById('barVita').style.width = Math.min(G.stats.vita*1.5,100)+'%';
+  document.getElementById('barVolo').style.width = Math.min(G.stats.volo*1.5,100)+'%';
+  const voloTitles=['Novice','Discipline','Resilient','Implacable','Indestructible'];
+  document.getElementById('voloSub').textContent = voloTitles[Math.min(Math.floor(G.stats.volo/10),4)];
+  document.getElementById('streakVal').textContent = G.streak;
+  document.getElementById('spokesPill').textContent = (G.spokes||0).toLocaleString()+' ⚙';
+  const masterBadge = document.getElementById('masterBadge');
+  const rank = Math.min(G.masterCount||0, 5);
+  if(rank>0){ const pb=PRESTIGE_BADGES[rank]; masterBadge.textContent=pb.label; masterBadge.style.display='inline-block'; }
+  else masterBadge.style.display='none';
+  renderAvatar();
+  renderMasterRow();
+  renderBuffPill();
+  renderCQBanner();
+}
+
+function renderAvatar(){
+  const wrap = document.getElementById('avatarWrap');
+  const rank = Math.min(G.masterCount||0, 5);
+  wrap.innerHTML = '<div class="avatar" id="avatar" style="background:'+getClass(G.lvl).bar.replace(')',',0.3)').replace('rgb','rgba')+';background:'+getClass(G.lvl).bar+'40">'+((G.params?.name||'Suliman').substring(0,3).toUpperCase())+'</div>';
+  const av = document.getElementById('avatar');
+  av.style.background = getClass(G.lvl).bar+'40';
+  if(rank>0){
+    const pb = PRESTIGE_BADGES[rank];
+    const ring = document.createElement('div');
+    ring.className = 'prestige-ring'+(pb.pulse?' pulse':'');
+    ring.style.borderColor = pb.ring;
+    wrap.appendChild(ring);
+    if(pb.ring2!=='none'){
+      const ring2 = document.createElement('div');
+      ring2.className = 'prestige-ring2';
+      ring2.style.borderColor = pb.ring2;
+      wrap.appendChild(ring2);
+    }
+    const stars = document.createElement('div');
+    stars.className = 'prestige-stars';
+    for(let i=0;i<pb.stars;i++){
+      stars.innerHTML += '<i class="ti ti-star" style="font-size:9px;color:'+pb.starColor+'"></i>';
+    }
+    wrap.appendChild(stars);
+  }
+}
+
+function renderMasterRow(){
+  const row = document.getElementById('masterRow');
+  row.style.display = (G.lvl>=MAX_LVL && !G.isMaster) ? 'flex' : 'none';
+}
+
+function renderBuffPill(){
+  const bonus = getActiveBuffBonus();
+  const pill = document.getElementById('buffPill');
+  if(bonus>0){ pill.style.display='flex'; document.getElementById('buffVal').textContent='+'+bonus+'% XP'; }
+  else pill.style.display='none';
+}
+
+// ============================================================
+// PAGE HABITUDES
+// ============================================================
+function renderHabitudes(){
+  const matin = document.getElementById('habitsMatin');
+  const soir = document.getElementById('habitsSoir');
+  matin.innerHTML=''; soir.innerHTML='';
+  HABITS_MATIN.forEach(h=>{
+    const div=document.createElement('div');
+    div.className='habit-item'+(habitDone.has(h.id)?' done':'');
+    div.innerHTML=`<div class="h-chk"><i class="ti ti-check" style="font-size:10px"></i></div><i class="ti ${h.icon}" style="font-size:16px"></i><div style="flex:1"><div class="h-name">${h.name}</div></div><div class="h-xp">+${h.xp} XP · +${h.spokes} ⚙</div>`;
+    div.addEventListener('click',()=>{ if(habitDone.has(h.id)){habitDone.delete(h.id);div.classList.remove('done');}else{habitDone.add(h.id);div.classList.add('done');} updateVolBar(); });
+    matin.appendChild(div);
+  });
+  HABITS_SOIR.forEach(h=>{
+    const div=document.createElement('div');
+    div.className='habit-item'+(habitDone.has(h.id)?' done':'');
+    div.innerHTML=`<div class="h-chk"><i class="ti ti-check" style="font-size:10px"></i></div><i class="ti ${h.icon}" style="font-size:16px"></i><div style="flex:1"><div class="h-name">${h.name}</div></div><div class="h-xp">+${h.xp} XP · +${h.spokes} ⚙</div>`;
+    div.addEventListener('click',()=>{ if(habitDone.has(h.id)){habitDone.delete(h.id);div.classList.remove('done');}else{habitDone.add(h.id);div.classList.add('done');} updateVolBar(); });
+    soir.appendChild(div);
+  });
+  updateVolBar();
+}
+
+function updateVolBar(){
+  const n=habitDone.size, t=ALL_HABITS.length;
+  document.getElementById('volLabel').textContent=n+' / '+t;
+  document.getElementById('volFill').style.width=Math.round(n/t*100)+'%';
+}
+
+// ============================================================
+// PAGE QUETES — ROTATION GENSHIN
+// ============================================================
+function getSetLabel(idx){ return ['A','B','C'][idx%3]; }
+function getSetColor(idx){ return ['#7B6FE8','#1D9E75','#D85A30'][idx%3]; }
+function daysRemaining(){ if(!G.setStartDate) return 0; return Math.max(0, SET_DURATION - Math.floor((Date.now()-G.setStartDate)/86400000)); }
+function isSetExpired(){ return G.setStartDate && daysRemaining()===0; }
+
+async function checkAndRotateSet(){
+  if(!G.questSets) G.questSets={};
+  const curLabel = getSetLabel(G.currentSetIdx);
+  if(!G.questSets[curLabel] || !G.setStartDate){ await generateSet(G.currentSetIdx); return; }
+  if(isSetExpired()){
+    const nextIdx = G.currentSetIdx+1;
+    G.currentSetIdx = nextIdx;
+    G.setStartDate = Date.now();
+    questDone.clear();
+    const nextLabel = getSetLabel(nextIdx);
+    if(!G.questSets[nextLabel]) await generateSet(nextIdx);
+    else { saveLocal(); if(document.getElementById('p-quetes').classList.contains('visible')) renderQuetes(); }
+    const after = getSetLabel(nextIdx+1);
+    if(!G.questSets[after]) generateSet(nextIdx+1, true);
+  } else {
+    const nextLabel = getSetLabel(G.currentSetIdx+1);
+    if(!G.questSets[nextLabel]) generateSet(G.currentSetIdx+1, true);
+  }
+}
+
+async function generateSet(setIdx, isPreload=false){
+  if(generatingSet) return;
+  generatingSet = true;
+  const label = getSetLabel(setIdx);
+  if(document.getElementById('p-quetes').classList.contains('visible')) renderQuetes();
+  try{
+    const res = await fetch('/.netlify/functions/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:'Genere le set '+label+'. '+SET_PROMPT}]})});
+    const data = await res.json();
+    const parsed = JSON.parse(((data&&data.content)?data.content.map(i=>i.text||''):['Erreur: réponse invalide']).join('').replace(/```json|```/g,'').trim()||'{}');
+    if(!G.questSets) G.questSets={};
+    G.questSets[label] = parsed.quetes||[];
+    if(!isPreload){ G.currentSetIdx=setIdx; G.setStartDate=Date.now(); }
+    saveLocal();
+  }catch(e){ console.error('Set gen error',e); }
+  generatingSet = false;
+  if(document.getElementById('p-quetes').classList.contains('visible')) renderQuetes();
+}
+
+function renderQuetes(){
+  const c = document.getElementById('questContainer'); c.innerHTML='';
+  const curLabel = getSetLabel(G.currentSetIdx);
+  const color = getSetColor(G.currentSetIdx);
+  const remaining = daysRemaining();
+  const elapsed = G.setStartDate ? Math.floor((Date.now()-G.setStartDate)/86400000) : 0;
+  const pct = Math.min(Math.round(elapsed/SET_DURATION*100),100);
+  const hdr = document.createElement('div');
+  hdr.style.cssText=`background:${color}20;border:0.5px solid ${color};border-radius:var(--radius-sm);padding:10px 13px;display:flex;align-items:center;gap:8px;margin-bottom:10px`;
+  hdr.innerHTML=`<span style="font-size:11px;font-weight:500;padding:2px 8px;border-radius:99px;background:${color};color:#fff">Set ${curLabel}</span><div style="flex:1"><div style="font-size:12px;color:${color};font-weight:500">Cycle actif</div><div style="height:4px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-top:4px"><div style="width:${pct}%;height:100%;background:${color};border-radius:99px"></div></div></div><span style="font-size:11px;font-weight:500;color:${color}">J${elapsed+1}/14 · ${remaining}j</span>`;
+  c.appendChild(hdr);
+  const qs = G.questSets && G.questSets[curLabel];
+  if(generatingSet && !qs){
+    const loading=document.createElement('div');
+    loading.style.cssText='text-align:center;padding:16px;color:var(--text2);font-size:13px';
+    loading.innerHTML='<i class="ti ti-loader spinning" style="font-size:16px;vertical-align:-3px;margin-right:6px;color:var(--purple)"></i>Generation des quetes...';
+    c.appendChild(loading);
+  } else if(qs){
+    const sportQ = qs.filter(q=>q.type==='Sport'||q.type==='Mental'||q.type==='Habitude');
+    const biketopQ = qs.filter(q=>q.type==='Biketop');
+    if(sportQ.length){
+      const t=document.createElement('div');t.className='sec-title';t.innerHTML=`<i class="ti ti-barbell" style="font-size:12px;color:#7B6FE8"></i>Sport & Perso — Set ${curLabel}`;c.appendChild(t);
+      sportQ.forEach(q=>c.appendChild(makeQuestEl(q,questDone)));
+    }
+    if(biketopQ.length){
+      const t=document.createElement('div');t.className='sec-title';t.style.marginTop='10px';t.innerHTML=`<i class="ti ti-tools" style="font-size:12px;color:#D85A30"></i>Biketop — Set ${curLabel}`;c.appendChild(t);
+      biketopQ.forEach(q=>c.appendChild(makeQuestEl(q,questDone)));
+    }
+  }
+  PALIERS.forEach(p=>{
+    const locked = G.lvl<p.lvl;
+    const div=document.createElement('div');div.className='sec-title';div.style.marginTop='14px';
+    div.innerHTML=`<i class="ti ${locked?'ti-lock':'ti-trophy'}" style="font-size:12px;color:${locked?'var(--text3)':p.color}"></i><span style="color:${locked?'var(--text3)':p.color}">Palier ${p.lvl} — ${p.name}</span>`;
+    if(!locked){const gb=document.createElement('button');gb.className='btn-outline';gb.style.cssText='border-color:'+p.color+';color:'+p.color+';font-size:11px;padding:4px 10px;margin-left:auto';const hasAI=G.aiQuestsByPalier&&G.aiQuestsByPalier[p.lvl];gb.innerHTML=(hasAI?'<i class="ti ti-refresh"></i> Regenerer':'<i class="ti ti-sparkles"></i> Generer IA');gb.addEventListener('click',()=>generatePalierQuests(p.lvl));div.appendChild(gb);}
+    c.appendChild(div);
+    const area=document.createElement('div');area.id='palier-area-'+p.lvl;
+    if(locked){ area.innerHTML=`<div style="font-size:12px;color:var(--text3);text-align:center;padding:8px">Debloque au niveau ${p.lvl}</div>`; }
+    else{
+      const pqs=G.aiQuestsByPalier&&G.aiQuestsByPalier[p.lvl];
+      if(!pqs){ area.innerHTML=`<div style="font-size:12px;color:var(--text3);text-align:center;padding:8px">Clique Generer IA pour des quetes personnalisees.</div>`; }
+      else{ pqs.forEach(q=>{ const el=makeQuestEl({...q,id:'ai-'+p.lvl+'-'+q.id},aiQuestDone,'purple'); el.innerHTML+='<span style="font-size:10px;padding:1px 6px;border-radius:99px;background:rgba(123,111,232,0.2);color:#7B6FE8;border:0.5px solid #7B6FE8;margin-left:4px">IA</span>'; area.appendChild(el); }); }
+    }
+    c.appendChild(area);
+  });
+}
+
+function makeQuestEl(q, doneSet, accent='green'){
+  const colors={green:{done:'var(--green-light)',border:'var(--green)',text:'var(--green)'},purple:{done:'var(--purple-light)',border:'var(--purple)',text:'var(--purple)'}};
+  const col=colors[accent]||colors.green;
+  const d=document.createElement('div');
+  d.className='quest-item'+(doneSet.has(q.id)?' done':'');
+  d.innerHTML=`<div class="q-chk"><i class="ti ti-check" style="font-size:10px"></i></div><span class="q-label">${q.label}</span><span class="q-xp">+${q.xp} XP · +${q.spokes||Math.round(q.xp/2)} ⚙</span>`;
+  d.addEventListener('click',()=>{ if(doneSet.has(q.id)){doneSet.delete(q.id);d.classList.remove('done');}else{doneSet.add(q.id);d.classList.add('done');} });
+  return d;
+}
+
+async function generatePalierQuests(lvl){
+  if(generatingPalier===lvl) return;
+  generatingPalier=lvl;
+  const area=document.getElementById('palier-area-'+lvl);
+  if(area) area.innerHTML=`<div style="font-size:12px;color:var(--text2);text-align:center;padding:10px"><i class="ti ti-loader spinning" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Generation...</div>`;
+  try{
+    const p=PALIERS.find(x=>x.lvl===lvl);
+    const res=await fetch('/.netlify/functions/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:'Palier '+lvl+' "'+p.name+'". '+PALIER_QUEST_PROMPT}]})});
+    const data=await res.json();
+    const quests=JSON.parse(((data&&data.content)?data.content.map(i=>i.text||''):['Erreur: réponse invalide']).join('').replace(/```json|```/g,'').trim()||'{}');
+    if(!G.aiQuestsByPalier) G.aiQuestsByPalier={};
+    G.aiQuestsByPalier[lvl]=quests.map((q,i)=>({...q,id:'p'+i}));
+    saveLocal();
+  }catch(e){if(area) area.innerHTML=`<div style="font-size:12px;color:var(--red);text-align:center;padding:8px">Erreur — reessaie.</div>`;}
+  generatingPalier=null;
+  if(document.getElementById('p-quetes').classList.contains('visible')) renderQuetes();
+}
+
+// ============================================================
+// PAGE HISTOIRE
+// ============================================================
+function renderStory(){
+  const c=document.getElementById('storyContainer'); c.innerHTML='';
+  if(generatingStory){ c.innerHTML=`<div style="text-align:center;padding:24px;color:var(--text2)"><i class="ti ti-loader spinning" style="font-size:20px;vertical-align:-3px;margin-right:8px"></i>Claude ecrit ton epopee...</div>`; return; }
+  if(!G.story){
+    c.innerHTML=`<div style="text-align:center;padding:32px 0"><i class="ti ti-book" style="font-size:36px;color:var(--text3);display:block;margin-bottom:12px"></i><div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px;font-family:var(--font-display)">Aucune epopee active</div><div style="font-size:13px;color:var(--text2);margin-bottom:20px">Claude va creer une grande aventure personnalisee avec 10 chapitres.</div><button class="btn-primary" id="genStoryBtn" style="width:auto;padding:10px 24px"><i class="ti ti-sparkles" style="font-size:14px;margin-right:5px"></i>Generer mon epopee</button></div>`;
+    document.getElementById('genStoryBtn').addEventListener('click', generateStory);
+    return;
+  }
+  if(G.story.error){ c.innerHTML=`<div style="text-align:center;padding:20px;color:var(--red)">Erreur de generation. <button onclick="generateStory()" style="background:none;border:none;color:var(--purple);cursor:pointer;font-family:var(--font-body)">Reessayer</button></div>`; return; }
+  const s=G.story, done=new Set(G.storyChaptersDone||[]), activeIdx=getActiveChIdx();
+  const pct=Math.round(done.size/s.chapitres.length*100);
+  const hdr=document.createElement('div');hdr.className='card';
+  hdr.innerHTML=`<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px"><i class="ti ti-book-2" style="font-size:20px;color:var(--amber);flex-shrink:0;margin-top:2px"></i><div style="flex:1"><div style="font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--text);margin-bottom:3px">${s.titre}</div><div style="font-size:12px;color:var(--text2);line-height:1.5">${s.description}</div></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:4px"><span>${done.size>=s.chapitres.length?'Epopee accomplie !':'Chapitre '+(activeIdx+1)+' / '+s.chapitres.length}</span><span style="color:var(--purple)">${pct}%</span></div><div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${done.size>=s.chapitres.length?'var(--green)':'var(--purple)'}"></div></div><div style="font-size:11px;color:var(--text3);margin-top:5px"><i class="ti ti-gift" style="font-size:11px;margin-right:3px"></i>${s.recompense_finale} · ${s.xp_total} XP total</div><div style="margin-top:10px"><button class="btn-outline" onclick="if(confirm('Abandonner cette epopee ?')){G.story=null;G.storyChaptersDone=[];G.storyTasksDone={};saveLocal();renderStory();}"><i class="ti ti-refresh" style="font-size:12px;margin-right:3px"></i>Nouvelle epopee</button></div>`;
+  c.appendChild(hdr);
+  s.chapitres.forEach((ch,i)=>{
+    const isDone=done.has(i),isActive=i===activeIdx,isLocked=i>activeIdx&&!isDone;
+    const tasksDone=new Set(Object.keys(G.storyTasksDone||{}).filter(k=>k.startsWith(i+'-')).map(k=>parseInt(k.split('-')[1])));
+    const allTasksDone=ch.taches&&tasksDone.size>=ch.taches.length;
+    const card=document.createElement('div');
+    card.className='chapter'+(isDone?' done-ch':isActive?' active-ch':isLocked?' locked-ch':'');
+    if(openChapter===i&&!isLocked) card.classList.add('open');
+    const numBg=isDone?'var(--green)':isActive?'var(--purple)':'var(--bg3)';
+    card.innerHTML=`<div class="ch-top"><div class="ch-num" style="background:${numBg}">${isDone?'<i class="ti ti-check" style="font-size:10px"></i>':isLocked?'<i class="ti ti-lock" style="font-size:10px"></i>':i+1}</div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">${ch.titre}</div><div style="font-size:11px;color:var(--text3);margin-top:1px">${isDone?'Accompli':isActive?tasksDone.size+' / '+(ch.taches?ch.taches.length:0)+' taches':isLocked?'Verrouille':ch.description.substring(0,50)+'...'}</div></div><span style="font-size:11px;font-weight:500;color:${isDone?'var(--green)':'var(--purple)'};white-space:nowrap">+${ch.xp} XP</span></div><div class="ch-body"><div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px;padding-top:4px">${ch.description}</div><div id="ch-tasks-${i}"></div><button class="btn-primary" id="ch-btn-${i}" style="${allTasksDone&&isActive&&!isDone?'':'opacity:0.4;cursor:default;pointer-events:none'}">Valider ce chapitre</button></div>`;
+    if(!isLocked){ card.querySelector('.ch-top').addEventListener('click',()=>{ openChapter=openChapter===i?null:i; renderStory(); }); }
+    c.appendChild(card);
+    if(card.classList.contains('open')&&ch.taches){
+      const tasksEl=document.getElementById('ch-tasks-'+i);
+      ch.taches.forEach((t,j)=>{
+        const td=document.createElement('div');const isTD=tasksDone.has(j);
+        td.className='task-item'+(isTD?' done':'');
+        td.innerHTML=`<div class="task-chk"><i class="ti ti-check" style="font-size:9px"></i></div><span style="font-size:12px;color:var(--text);line-height:1.4">${t.label}</span>`;
+        if(!isDone&&isActive){ td.addEventListener('click',()=>{ const k=i+'-'+j; if(!G.storyTasksDone) G.storyTasksDone={}; if(G.storyTasksDone[k]) delete G.storyTasksDone[k]; else G.storyTasksDone[k]=true; saveLocal(); renderStory(); }); }
+        if(tasksEl) tasksEl.appendChild(td);
+      });
+      const btn=document.getElementById('ch-btn-'+i);
+      if(btn&&allTasksDone&&isActive&&!isDone){ btn.addEventListener('click',()=>{ if(!confirm('Confirmes-tu avoir accompli ce chapitre ?')) return; if(!G.storyChaptersDone) G.storyChaptersDone=[]; G.storyChaptersDone.push(i); addXP(ch.xp); addSpokes(ch.spokes||Math.round(ch.xp/2)); addStats({force:0,recup:0,vita:1,volo:1}); openChapter=i+1<s.chapitres.length?i+1:null; saveLocal(); checkAchievements(); renderUI(); renderStory(); const nd=new Set(G.storyChaptersDone); if(nd.size>=s.chapitres.length) showToast('Epopee accomplie ! '+s.recompense_finale,'gold'); else showToast('Chapitre '+(i+1)+' accompli !','green-t'); }); }
+    }
+  });
+}
+
+function getActiveChIdx(){ if(!G.story||G.story.error) return 0; const done=new Set(G.storyChaptersDone||[]); for(let i=0;i<G.story.chapitres.length;i++){if(!done.has(i))return i;} return G.story.chapitres.length; }
+
+async function generateStory(){
+  if(generatingStory) return; generatingStory=true; renderStory();
+  try{
+    const res=await fetch('/.netlify/functions/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',content:STORY_PROMPT}]})});
+    const data=await res.json();
+    const parsed=JSON.parse(((data&&data.content)?data.content.map(i=>i.text||''):['Erreur: réponse invalide']).join('').replace(/```json|```/g,'').trim()||'{}');
+    parsed.xp_total=parsed.chapitres.reduce((s,c)=>s+c.xp,0);
+    G.story=parsed; G.storyChaptersDone=[]; G.storyTasksDone={}; saveLocal();
+  }catch(e){ G.story={error:true}; }
+  generatingStory=false; renderStory();
+}
+
+// ============================================================
+// QUETES DE CLASSE
+// ============================================================
+async function generateCQ(capLvl){
+  if(generatingCQ===capLvl) return; generatingCQ=capLvl; renderCQBanner();
+  const cIdx=CQ_CAPS.indexOf(capLvl), meta=CQ_META[cIdx], nextCl=CLASSES[cIdx+1];
+  try{
+    const res=await fetch('/.netlify/functions/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:'Passage niv '+capLvl+' vers '+nextCl.name+'. Duree : '+meta.label+'. Difficulte : '+meta.diff+' rang '+meta.rank+'/IV. '+CQ_PROMPT}]})});
+    const data=await res.json();
+    G.classQuests[capLvl]=JSON.parse(((data&&data.content)?data.content.map(i=>i.text||''):['Erreur: réponse invalide']).join('').replace(/```json|```/g,'').trim()||'{}');
+    if(!G.classQuestsObjDone[capLvl]) G.classQuestsObjDone[capLvl]=[];
+    saveLocal();
+  }catch(e){ G.classQuests[capLvl]={titre:'Erreur',objectifs:[{label:'Erreur de generation. Regenere.',categorie:''}]}; }
+  generatingCQ=null; renderCQBanner();
+}
+
+function getObjDone(l){ return new Set(G.classQuestsObjDone[l]||[]); }
+function setObjDone(l,i,v){
+  if(!G.classQuestsObjDone[l]) G.classQuestsObjDone[l]=[];
+  const s=new Set(G.classQuestsObjDone[l]); v?s.add(i):s.delete(i);
+  G.classQuestsObjDone[l]=[...s]; saveLocal(); renderCQBanner();
+}
+
+const CAT_COL={Sport:'rgba(123,111,232,0.2)',Mental:'rgba(239,159,39,0.2)',Habitude:'rgba(29,158,117,0.2)',Biketop:'rgba(216,90,48,0.2)'};
+const CAT_TEXT={Sport:'#7B6FE8',Mental:'#EF9F27',Habitude:'#1D9E75',Biketop:'#D85A30'};
+const CQ_SPOKES=[500,1500,4000,10000];
+
+function renderCQBanner(){
+  const banner=document.getElementById('cqBanner');
+  if(!isAtCap()){ banner.classList.remove('visible'); banner.style.display='none'; return; }
+  const cap=G.lvl, cIdx=CQ_CAPS.indexOf(cap), cl=CLASSES[cIdx], nextCl=CLASSES[cIdx+1], meta=CQ_META[cIdx], quest=G.classQuests[cap];
+  banner.style.cssText=`background:${cl.bg};border-color:${cl.color}`;
+  banner.classList.add('visible');
+  let html=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="ti ti-shield-lock" style="font-size:20px;color:${cl.color}"></i><div><div style="font-family:var(--font-display);font-size:14px;font-weight:700;color:${cl.color}">Quete de classe — Rang ${meta.rank}</div><div style="font-size:11px;color:${cl.color};opacity:0.8;margin-top:1px">${cl.name} → ${nextCl.name} · ${meta.label} · ${meta.diff}</div></div></div>`;
+  html+=`<div style="font-size:12px;color:${cl.color};margin-bottom:10px;line-height:1.5">XP cap niv. ${cap}. Accomplis <strong>tous</strong> les objectifs pour debloquer <strong>${nextCl.name}</strong>. Recompense : +${CQ_SPOKES[cIdx].toLocaleString()} ⚙</div>`;
+  if(generatingCQ===cap){ html+=`<div style="font-size:13px;color:${cl.color}"><i class="ti ti-loader spinning" style="font-size:14px;vertical-align:-2px;margin-right:6px"></i>Forge de ta quete...</div>`; }
+  else if(!quest){ html+=`<div style="font-size:12px;color:var(--text2);margin-bottom:10px">Quete non generee.</div><button onclick="generateCQ(${cap})" style="font-size:12px;padding:6px 14px;border-radius:99px;border:none;background:${cl.color};color:#fff;cursor:pointer;font-family:var(--font-body)"><i class="ti ti-sparkles" style="font-size:12px;margin-right:4px"></i>Generer la quete</button>`; }
+  else{
+    const od=getObjDone(cap), total=quest.objectifs.length, done=od.size, pct=Math.round(done/total*100);
+    html+=`<div style="font-family:var(--font-display);font-size:14px;font-weight:700;color:${cl.color};margin-bottom:8px"><i class="ti ti-sword" style="font-size:13px;margin-right:5px"></i>${quest.titre}</div>`;
+    html+=`<div style="display:flex;justify-content:space-between;font-size:11px;color:${cl.color};margin-bottom:4px"><span>Progression</span><span>${done}/${total}</span></div><div style="height:6px;background:var(--bg);border-radius:99px;overflow:hidden;margin-bottom:10px"><div style="width:${pct}%;height:100%;background:${cl.color};border-radius:99px"></div></div>`;
+    html+=`<div id="cqb-objs">`;
+    quest.objectifs.forEach((obj,i)=>{
+      const isDone=od.has(i);
+      html+=`<div onclick="setObjDone(${cap},${i},${!isDone})" style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:var(--radius-sm);background:${isDone?'rgba(29,158,117,0.15)':'var(--bg)'};border:0.5px solid ${isDone?'var(--green)':'var(--border)'};cursor:pointer;margin-bottom:5px"><div style="width:16px;height:16px;border-radius:50%;border:1.5px solid ${isDone?'var(--green)':'var(--border2)'};background:${isDone?'var(--green)':'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><i class="ti ti-check" style="font-size:9px;color:#fff"></i></div><span style="flex:1;font-size:12px;color:${isDone?'var(--green)':'var(--text)'};">${obj.label}</span><span style="font-size:10px;padding:1px 6px;border-radius:99px;background:${CAT_COL[obj.categorie]||'var(--bg3)'};color:${CAT_TEXT[obj.categorie]||'var(--text2)'};white-space:nowrap">${obj.categorie}</span></div>`;
+    });
+    html+=`</div><div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">`;
+    const allDone=done===total;
+    html+=`<button onclick="validateCQ(${cap})" style="font-size:12px;font-weight:500;padding:7px 16px;border-radius:99px;border:none;background:${allDone?cl.color:'var(--bg3)'};color:${allDone?'#fff':'var(--text3)'};cursor:${allDone?'pointer':'default'};font-family:var(--font-body)">${allDone?'Valider le passage de classe !':'Completer tous les objectifs...'}</button>`;
+    html+=`<button onclick="regenCQ(${cap})" style="font-size:12px;padding:6px 12px;border-radius:99px;border:0.5px solid ${cl.color};background:transparent;color:${cl.color};cursor:pointer;font-family:var(--font-body)"><i class="ti ti-refresh" style="font-size:12px"></i></button>`;
+    html+=`</div>`;
+  }
+  banner.innerHTML=html;
+}
+
+function regenCQ(l){ G.classQuests[l]=null; G.classQuestsObjDone[l]=[]; renderCQBanner(); generateCQ(l); }
+function validateCQ(cap){
+  const q=G.classQuests[cap]; const od=getObjDone(cap);
+  if(!q||od.size<q.objectifs.length) return;
+  if(!confirm('Confirmes-tu avoir accompli tous ces objectifs dans ta vraie vie ?')) return;
+  G.classQuestsDone[cap]=true;
+  const cIdx=CQ_CAPS.indexOf(cap), nextCl=CLASSES[cIdx+1];
+  G.lvl=cap+1; G.xp=totalXpTo(G.lvl,G.isMaster);
+  addSpokes(CQ_SPOKES[cIdx]);
+  saveLocal(); checkAchievements(); renderUI();
+  showToast('Classe debloquee ! Bienvenue '+nextCl.name+' !','gold');
+}
+
+// ============================================================
+// PALIERS PAGE
+// ============================================================
+function renderPaliers(){
+  const c=document.getElementById('paliersContainer'); c.innerHTML='';
+  PALIERS.forEach(p=>{
+    const unlocked=G.lvl>=p.lvl;
+    const card=document.createElement('div');
+    card.className='card';
+    if(unlocked) card.style.borderColor=p.color;
+    const pqs=(G.aiQuestsByPalier||{})[p.lvl];
+    const qhtml=(pqs||p.quests||[]).map(q=>{
+      const done=(palierQuestDone.has(q.id))||((G.palierDone||[]).includes(q.id));
+      const bg = done ? 'rgba(29,158,117,0.15)' : 'var(--bg3)';
+      const cursor = unlocked ? 'pointer' : 'default';
+      const clickFn = unlocked ? 'togglePalierQuest(\'' + q.id + '\')' : '';
+      const ico = done ? 'check' : 'sword';
+      const icoColor = done ? 'var(--green)' : 'var(--text2)';
+      const textColor = done ? 'var(--green)' : 'var(--text)';
+      const rewardColor = done ? 'var(--green)' : p.color;
+      return '<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--radius-sm);background:' + bg + ';cursor:' + cursor + ';margin-bottom:4px" onclick="' + clickFn + '"><i class="ti ti-' + ico + '" style="font-size:12px;color:' + icoColor + '"></i><span style="flex:1;font-size:12px;color:' + textColor + '">' + q.label + '</span><span style="font-size:11px;font-weight:500;color:' + rewardColor + '">+' + q.xp + ' XP · +' + (q.spokes||Math.round(q.xp/2)) + ' ⚙</span></div>';
+    }).join('');
+    card.innerHTML=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:11px;font-weight:500;padding:2px 8px;border-radius:99px;background:${p.bg};color:${p.color};border:0.5px solid ${p.border}">${unlocked?'Niv. '+p.lvl+' — Debloque':'Niveau '+p.lvl+' requis'}</span><i class="ti ti-${unlocked?'check':'lock'}" style="font-size:14px;color:${unlocked?'var(--green)':'var(--text3)'};margin-left:auto"></i></div><div style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${p.name}</div><div style="font-size:12px;color:var(--text2);margin-bottom:8px;line-height:1.4">${p.title}<br>${p.bonus}</div>${qhtml}`;
+    c.appendChild(card);
+  });
+}
+
+function togglePalierQuest(id){
+  const arr=G.palierDone||[];
+  if(arr.includes(id)){ G.palierDone=arr.filter(x=>x!==id); }
+  else{ G.palierDone=[...arr,id]; const p=PALIERS.flatMap(p=>p.quests||[]).find(q=>q.id===id); if(p){ addXP(p.xp); addSpokes(p.spokes||Math.round(p.xp/2)); addStats({force:0,recup:0,vita:0,volo:1}); renderUI(); showToast('+'+p.xp+' XP · +'+( p.spokes||Math.round(p.xp/2))+' ⚙','green-t'); } }
+  saveLocal(); renderPaliers();
+}
+
+// ============================================================
+// INVENTAIRE
+// ============================================================
+function renderInventaire(){
+  const c=document.getElementById('inventaireContainer'); c.innerHTML='';
+  const activeBuff=getActiveBuff();
+  const t0=document.createElement('div');t0.className='sec-title';t0.innerHTML='<i class="ti ti-bolt" style="font-size:12px;color:var(--purple)"></i>Buffs & Protections';c.appendChild(t0);
+  if(activeBuff){ const bi=document.createElement('div');bi.className='shop-item active-buff';bi.innerHTML=`<div class="shop-ico" style="background:rgba(29,158,117,0.2);color:var(--green)"><i class="ti ti-flame"></i></div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--green)">${activeBuff.name}</div><div style="font-size:11px;color:var(--green)">+${activeBuff.xpBonus}% XP · expire dans ${Math.ceil((activeBuff.expiry-Date.now())/86400000)} jours</div></div><span style="font-size:10px;padding:2px 7px;border-radius:99px;background:rgba(29,158,117,0.2);color:var(--green);border:0.5px solid var(--green)">Actif</span>`;c.appendChild(bi); }
+  const protEl=document.createElement('div');protEl.className='shop-item';protEl.innerHTML=`<div class="shop-ico" style="background:rgba(123,111,232,0.2);color:var(--purple)"><i class="ti ti-shield-check"></i></div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">Protections de streak</div><div style="font-size:11px;color:var(--text2)">Declenchement automatique si journee manquee</div></div><span style="font-size:18px;font-weight:700;color:var(--purple)">${G.streakProtections||0}</span>`;c.appendChild(protEl);
+  const t1=document.createElement('div');t1.className='sec-title';t1.style.marginTop='14px';t1.innerHTML='<i class="ti ti-shield" style="font-size:12px;color:var(--purple)"></i>Slots equipes';c.appendChild(t1);
+  const eq=G.inventory?.equipped||{};
+  const slotNames={casque:'Casque',plastron:'Plastron',pantalon:'Pantalon',bottes:'Bottes'};
+  const slotsDiv=document.createElement('div');slotsDiv.className='eq-slots';
+  EQ_SLOTS.forEach(slot=>{
+    const equipped=eq[slot];
+    const el=document.createElement('div');
+    if(equipped){
+      const [setId,pieceId,rarity]=equipped.split('|');
+      const set=EQUIPMENT_SETS.find(s=>s.id===setId);
+      const piece=set?.pieces.find(p=>p.id===pieceId);
+      const rarityNames={std:'Standard',elite:'Elite',leg:'Legendaire'};
+      const rarityColors={std:['rgba(136,135,128,0.15)','#B4B2A9'],elite:['rgba(133,183,235,0.15)','#85B7EB'],leg:['rgba(239,159,39,0.15)','#EF9F27']};
+      const [bg,color]=rarityColors[rarity]||rarityColors.std;
+      el.className='eq-slot equipped '+rarity;
+      el.innerHTML=`<i class="ti ti-hard-hat" style="font-size:18px;color:${color};display:block;margin-bottom:4px"></i><div style="font-size:10px;font-weight:500;color:${color}">${slotNames[slot]}</div><div style="font-size:10px;color:var(--text3)">${set?.name||''}</div><div style="font-size:9px;color:${color};margin-top:2px">${rarityNames[rarity]}</div>`;
+      el.addEventListener('click',()=>openEquipModal(slot));
+    } else {
+      el.className='eq-slot';
+      el.innerHTML=`<i class="ti ti-plus" style="font-size:18px;color:var(--text3);display:block;margin-bottom:4px"></i><div style="font-size:11px;color:var(--text3)">${slotNames[slot]}</div><div style="font-size:10px;color:var(--text3)">Vide</div>`;
+      el.addEventListener('click',()=>openEquipModal(slot));
+    }
+    slotsDiv.appendChild(el);
+  });
+  c.appendChild(slotsDiv);
+  EQUIPMENT_SETS.forEach(set=>{
+    const t2=document.createElement('div');t2.className='sec-title';t2.style.marginTop='12px';t2.innerHTML=`<i class="ti ${set.icon}" style="font-size:12px;color:${set.color}"></i><span style="color:${set.color}">${set.name}</span>`;c.appendChild(t2);
+    const owned=G.inventory?.owned||{};
+    const ownedPieces=set.pieces.filter(p=>owned[p.id]);
+    const pct=Math.round(ownedPieces.length/set.pieces.length*100);
+    const ph=document.createElement('div');ph.className='card';
+    const progHtml=`<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px"><span>${ownedPieces.length} / ${set.pieces.length} pieces</span><span style="color:${set.color}">${pct}%</span></div><div class="prog-track" style="margin-bottom:10px"><div class="prog-fill" style="width:${pct}%;background:${set.color}"></div></div>`;
+    const piecesHtml=set.pieces.map(p=>{
+      const ownedRarity=owned[p.id];
+      const rarityColors={std:'#B4B2A9',elite:'#85B7EB',leg:'#EF9F27'};
+      const color=ownedRarity?rarityColors[ownedRarity]:'var(--text3)';
+      const rarityNames={std:'Standard',elite:'Elite',leg:'Legendaire'};
+      return `<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--radius-sm);background:${ownedRarity?set.bg:'var(--bg3)'};border:0.5px solid ${ownedRarity?set.color:'var(--border)'};cursor:pointer;margin-bottom:4px" onclick="openEquipShop('${set.id}','${p.id}')"><i class="ti ${p.icon}" style="font-size:14px;color:${color}"></i><div style="flex:1"><div style="font-size:12px;font-weight:500;color:${ownedRarity?'var(--text)':'var(--text3)'};">${p.name}</div><div style="font-size:10px;color:${color}">${ownedRarity?rarityNames[ownedRarity]+' — '+p[ownedRarity].bonus:'Non obtenu'}</div></div>${ownedRarity?'<span style="font-size:10px;padding:1px 6px;border-radius:99px;background:'+set.bg+';color:'+set.color+';border:0.5px solid '+set.color+'">'+rarityNames[ownedRarity]+'</span>':'<span style="font-size:10px;color:var(--text3)">'+p.std.price.toLocaleString()+' ⚙</span>'}</div>`;
+    }).join('');
+    ph.innerHTML=progHtml+piecesHtml;
+    c.appendChild(ph);
+  });
+}
+
+function getActiveBuff(){
+  const now=Date.now();
+  return (G.buffs||[]).find(b=>b.expiry>now)||null;
+}
+
+function openEquipModal(slot){
+  const modal=document.createElement('div');
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px';
+  const inner=document.createElement('div');
+  inner.style.cssText='background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius);padding:16px;width:100%;max-width:400px;max-height:80vh;overflow-y:auto';
+  const slotNames={casque:'Casque',plastron:'Plastron',pantalon:'Pantalon',bottes:'Bottes'};
+  let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--text)">Choisir ${slotNames[slot]}</div><button onclick="this.closest('div').parentElement.remove();renderInventaire()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px"><i class="ti ti-x"></i></button></div>`;
+  html+=`<div onclick="unequipSlot('${slot}',this.closest('div').parentElement.parentElement)" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius-sm);background:var(--bg3);cursor:pointer;margin-bottom:8px"><i class="ti ti-x" style="font-size:14px;color:var(--text3)"></i><span style="font-size:13px;color:var(--text2)">Retirer l'equipement</span></div>`;
+  const owned=G.inventory?.owned||{};
+  EQUIPMENT_SETS.forEach(set=>{
+    const slotKey={casque:'casque',plastron:'plastron',pantalon:'pantalon',bottes:'bottes'}[slot];
+    const matchPieces=set.pieces.filter(p=>{
+      const id=p.id.toLowerCase();
+      return id.includes('casque')||id.includes('plastron')||id.includes('debardeur')||id.includes('pantalon')||id.includes('cuissard')||id.includes('short')||id.includes('baudrier')||id.includes('veste')||id.includes('bottes')||id.includes('chaussures')||id.includes('chaussons');
+    }).filter(p=>{
+      if(slot==='casque') return p.id.includes('casque')||p.id.includes('visiere');
+      if(slot==='plastron') return p.id.includes('plastron')||p.id.includes('debardeur')||p.id.includes('baudrier')||p.id.includes('veste');
+      if(slot==='pantalon') return p.id.includes('pantalon')||p.id.includes('cuissard')||p.id.includes('short')||p.id.includes('ceinture');
+      if(slot==='bottes') return p.id.includes('bottes')||p.id.includes('chaussures')||p.id.includes('chaussons');
+      return false;
+    });
+    matchPieces.forEach(p=>{
+      const ownedRarity=owned[p.id];
+      if(!ownedRarity) return;
+      const rarityColors={std:'#B4B2A9',elite:'#85B7EB',leg:'#EF9F27'};
+      const rarityNames={std:'Standard',elite:'Elite',leg:'Legendaire'};
+      const isEquipped=(G.inventory?.equipped||{})[slot]===set.id+'|'+p.id+'|'+ownedRarity;
+      html+=`<div onclick="equipItem('${slot}','${set.id}','${p.id}','${ownedRarity}',this.closest('div').parentElement.parentElement)" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius-sm);background:${isEquipped?set.bg:'var(--bg3)'};border:0.5px solid ${isEquipped?set.color:'var(--border)'};cursor:pointer;margin-bottom:6px"><i class="ti ${p.icon}" style="font-size:14px;color:${rarityColors[ownedRarity]}"></i><div style="flex:1"><div style="font-size:13px;color:var(--text)">${set.name} — ${p.name}</div><div style="font-size:11px;color:var(--text3)">${rarityNames[ownedRarity]} · ${p[ownedRarity].bonus}</div></div>${isEquipped?'<i class="ti ti-check" style="font-size:14px;color:'+set.color+'"></i>':''}</div>`;
+    });
+  });
+  inner.innerHTML=html;
+  modal.appendChild(inner);
+  document.body.appendChild(modal);
+  modal.addEventListener('click',e=>{ if(e.target===modal){ modal.remove(); renderInventaire(); } });
+}
+
+function equipItem(slot,setId,pieceId,rarity,modal){
+  if(!G.inventory) G.inventory={equipped:{},owned:{}};
+  if(!G.inventory.equipped) G.inventory.equipped={};
+  G.inventory.equipped[slot]=setId+'|'+pieceId+'|'+rarity;
+  modal.remove(); saveLocal(); renderInventaire(); renderUI(); showToast('Equipement mis a jour !','green-t');
+}
+function unequipSlot(slot,modal){ if(!G.inventory?.equipped) return; G.inventory.equipped[slot]=null; modal.remove(); saveLocal(); renderInventaire(); renderUI(); }
+
+function openEquipShop(setId,pieceId){
+  const set=EQUIPMENT_SETS.find(s=>s.id===setId);
+  const piece=set?.pieces.find(p=>p.id===pieceId);
+  if(!set||!piece) return;
+  const owned=G.inventory?.owned||{};
+  const currentRarity=owned[pieceId];
+  const modal=document.createElement('div');
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px';
+  const inner=document.createElement('div');
+  inner.style.cssText='background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--radius);padding:16px;width:100%;max-width:360px';
+  const rarityOrder=['std','elite','leg'];
+  const rarityNames={std:'Standard',elite:'Elite',leg:'Legendaire'};
+  const rarityColors={std:'#B4B2A9',elite:'#85B7EB',leg:'#EF9F27'};
+  let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--text)">${set.name} — ${piece.name}</div><button onclick="this.closest('div').parentElement.remove();renderInventaire()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px"><i class="ti ti-x"></i></button></div>`;
+  rarityOrder.forEach(r=>{
+    const data=piece[r];
+    const isOwned=currentRarity==='std'&&r==='std'||currentRarity==='elite'&&(r==='std'||r==='elite')||currentRarity==='leg';
+    const canBuy=!isOwned&&(r==='std'||currentRarity==='std'&&r==='elite'||currentRarity==='elite'&&r==='leg');
+    const canAfford=G.spokes>=data.price;
+    html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);background:${isOwned?set.bg:'var(--bg3)'};border:0.5px solid ${isOwned?set.color:'var(--border)'};margin-bottom:8px"><div style="flex:1"><div style="font-size:13px;font-weight:500;color:${rarityColors[r]}">${rarityNames[r]}</div><div style="font-size:11px;color:var(--text2)">${data.bonus}</div><div style="font-size:11px;color:var(--amber);margin-top:2px">${data.price.toLocaleString()} ⚙</div></div>${isOwned?'<span style="font-size:11px;color:'+set.color+';font-weight:500">Possede</span>':canBuy?('<button onclick="buyEquip(\'' + setId + '\',\'' + pieceId + '\',\'' + r + '\',' + data.price + ',this.closest(\'div\').parentElement.parentElement)" style="font-size:11px;padding:5px 12px;border-radius:99px;background:' + (canAfford?set.bg:'var(--bg)') + ';border:0.5px solid ' + (canAfford?set.color:'var(--border)') + ';color:' + (canAfford?set.color:'var(--text3)') + ';cursor:' + (canAfford?'pointer':'default') + ';font-family:var(--font-body)">' + (canAfford?'Acheter':'Insuffisant') + '</button>'):'<span style="font-size:11px;color:var(--text3)">Locked</span>'}</div>`;
+  });
+  inner.innerHTML=html;
+  modal.appendChild(inner);
+  document.body.appendChild(modal);
+  modal.addEventListener('click',e=>{ if(e.target===modal){ modal.remove(); renderInventaire(); } });
+}
+
+function buyEquip(setId,pieceId,rarity,price,modal){
+  if(G.spokes<price){ showToast('Spokes insuffisants !','normal'); return; }
+  if(!confirm('Acheter pour '+price.toLocaleString()+' ⚙ ?')) return;
+  G.spokes-=price;
+  if(!G.inventory) G.inventory={equipped:{},owned:{}};
+  if(!G.inventory.owned) G.inventory.owned={};
+  G.inventory.owned[pieceId]=rarity;
+  modal.remove(); saveLocal(); checkAchievements(); renderUI(); renderInventaire();
+  showToast('Equipement obtenu !','gold');
+}
+
+// ============================================================
+// SPOKES PAGE
+// ============================================================
+function renderSpokes(){
+  const c=document.getElementById('spokesContainer'); c.innerHTML='';
+  const totalEpargne=G.epargneTotal||0;
+  const nextAch=[{target:1000,label:'Epargnant'},{target:2000,label:'Batisseur'},{target:5000,label:'Invest. Confirme'},{target:10000,label:'Maitre Finances'}].find(x=>totalEpargne<x.target);
+  const metric=document.createElement('div');metric.className='metric-grid';
+  metric.innerHTML=`<div class="metric"><div class="metric-label"><i class="ti ti-coin" style="font-size:12px;color:var(--amber);margin-right:3px"></i>Spokes</div><div class="metric-val" style="color:var(--amber)">${(G.spokes||0).toLocaleString()} ⚙</div><div class="metric-sub">100 Spokes = 1€</div></div><div class="metric"><div class="metric-label"><i class="ti ti-piggy-bank" style="font-size:12px;color:var(--green);margin-right:3px"></i>Epargne totale</div><div class="metric-val" style="color:var(--green)">${totalEpargne}€</div><div class="metric-sub">depuis le debut</div></div><div class="metric"><div class="metric-label"><i class="ti ti-bolt" style="font-size:12px;color:var(--purple);margin-right:3px"></i>Buff actif</div><div class="metric-val" style="font-size:15px;color:${getActiveBuffBonus()>0?'var(--green)':'var(--text3)'};margin-top:3px">${getActiveBuffBonus()>0?'+'+getActiveBuffBonus()+'% XP':'Aucun'}</div></div>`;
+  c.appendChild(metric);
+  const tabs=document.createElement('div');tabs.style.cssText='display:flex;gap:4px;margin-bottom:12px;background:var(--bg2);padding:4px;border-radius:var(--radius);border:0.5px solid var(--border)';
+  const tabData=[{id:'boutique',icon:'ti-shopping-bag',label:'Boutique'},{id:'epargne',icon:'ti-piggy-bank',label:'Epargne'},{id:'historique',icon:'ti-history',label:'Historique'}];
+  tabData.forEach((t,i)=>{
+    const b=document.createElement('button');b.className='nav-btn'+(i===0?' active':'');b.style.flex='1';
+    b.innerHTML=`<i class="ti ${t.icon}" style="font-size:12px"></i>${t.label}`;
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('#spokesContainer .nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+      document.querySelectorAll('#spokesContainer .spokes-sub').forEach(x=>x.style.display='none');
+      document.getElementById('spoke-'+t.id).style.display='block';
+    });
+    tabs.appendChild(b);
+  });
+  c.appendChild(tabs);
+  const boutique=document.createElement('div');boutique.id='spoke-boutique';boutique.className='spokes-sub';
+  const epargneDiv=document.createElement('div');epargneDiv.id='spoke-epargne';epargneDiv.className='spokes-sub';epargneDiv.style.display='none';
+  const historiqueDiv=document.createElement('div');historiqueDiv.id='spoke-historique';historiqueDiv.className='spokes-sub';historiqueDiv.style.display='none';
+  c.appendChild(boutique); c.appendChild(epargneDiv); c.appendChild(historiqueDiv);
+  buildBoutique(boutique);
+  buildEpargne(epargneDiv);
+  buildHistorique(historiqueDiv);
+}
+
+function buildBoutique(c){
+  const st=document.createElement('div');st.className='sec-title';st.innerHTML='<i class="ti ti-bolt" style="font-size:12px;color:var(--purple)"></i>Buffs XP';c.appendChild(st);
+  const activeBuff=getActiveBuff();
+  SHOP_BUFFS.forEach(b=>{
+    const isActive=activeBuff&&activeBuff.id===b.id;
+    const div=document.createElement('div');div.className='shop-item'+(isActive?' active-buff':'');
+    const canAfford=G.spokes>=b.price;
+    const btnHtml = isActive 
+      ? '<span style="font-size:10px;padding:2px 7px;border-radius:99px;background:rgba(29,158,117,0.2);color:var(--green)">Actif</span>'
+      : '<button onclick="buyBuff(\'' + b.id + '\')" style="font-size:11px;padding:4px 10px;border-radius:99px;background:' + (canAfford?'rgba(123,111,232,0.2)':'var(--bg3)') + ';border:0.5px solid ' + (canAfford?'var(--purple)':'var(--border)') + ';color:' + (canAfford?'var(--purple)':'var(--text3)') + ';cursor:' + (canAfford?'pointer':'default') + ';font-family:var(--font-body)">' + (canAfford?'Acheter':'Insuffisant') + '</button>';
+    div.innerHTML=`<div class="shop-ico" style="background:${b.ico_bg};color:${b.ico_color}"><i class="ti ${b.icon}"></i></div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">${b.name}</div><div style="font-size:11px;color:var(--text2)">${b.desc}</div></div><div style="text-align:right"><div class="shop-price" style="margin-bottom:3px">${b.price.toLocaleString()} ⚙</div>${btnHtml}</div>`;
+    c.appendChild(div);
+  });
+  const sp=document.createElement('div');sp.className='sec-title';sp.style.marginTop='12px';sp.innerHTML='<i class="ti ti-shield-check" style="font-size:12px;color:var(--purple)"></i>Protections de streak';c.appendChild(sp);
+  SHOP_PROTECTIONS.forEach(p=>{
+    const canAfford=G.spokes>=p.price;
+    const div=document.createElement('div');div.className='shop-item';
+    div.innerHTML=`<div class="shop-ico" style="background:${p.ico_bg};color:${p.ico_color}"><i class="ti ${p.icon}"></i></div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">${p.name}</div><div style="font-size:11px;color:var(--text2)">${p.desc}</div></div><div style="text-align:right"><div class="shop-price" style="margin-bottom:3px">${p.price.toLocaleString()} ⚙</div><button onclick="buyProtection(${p.qty},${p.price})" style="font-size:11px;padding:4px 10px;border-radius:99px;background:${canAfford?'rgba(123,111,232,0.2)':'var(--bg3)'};border:0.5px solid ${canAfford?'var(--purple)':'var(--border)'};color:${canAfford?'var(--purple)':'var(--text3)'};cursor:${canAfford?'pointer':'default'};font-family:var(--font-body)">${canAfford?'Acheter':'Insuffisant'}</button></div>`;
+    c.appendChild(div);
+  });
+  const rw=document.createElement('div');rw.className='sec-title';rw.style.marginTop='12px';rw.innerHTML='<i class="ti ti-gift" style="font-size:12px;color:var(--coral)"></i>Recompenses reelles';c.appendChild(rw);
+  SHOP_REWARDS.forEach(r=>{
+    const canAfford=G.spokes>=r.price;
+    const div=document.createElement('div');div.className='shop-item';
+    div.innerHTML=`<div class="shop-ico" style="background:${r.ico_bg};color:${r.ico_color}"><i class="ti ${r.icon}"></i></div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">${r.name}</div><div style="font-size:11px;color:var(--text2)">${r.desc}</div></div><div style="text-align:right"><div class="shop-price" style="margin-bottom:3px">${r.price.toLocaleString()} ⚙</div><button onclick="buyReward('${r.id}','${r.name}',${r.price})" style="font-size:11px;padding:4px 10px;border-radius:99px;background:${canAfford?'rgba(216,90,48,0.2)':'var(--bg3)'};border:0.5px solid ${canAfford?'var(--coral)':'var(--border)'};color:${canAfford?'var(--coral)':'var(--text3)'};cursor:${canAfford?'pointer':'default'};font-family:var(--font-body)">${canAfford?'Acheter':'Insuffisant'}</button></div>`;
+    c.appendChild(div);
+  });
+}
+
+function buildEpargne(c){
+  const totalEpargne=G.epargneTotal||0;
+  const nextTargets=[1000,2000,5000,10000];
+  const h=document.createElement('div');h.className='sec-title';h.innerHTML='<i class="ti ti-piggy-bank" style="font-size:12px;color:var(--green)"></i>Progression epargne';c.appendChild(h);
+  const prog=document.createElement('div');prog.className='card';
+  let progHtml='';
+  nextTargets.forEach(t=>{ 
+    const p=Math.min(Math.round(totalEpargne/t*100),100);
+    const mt = progHtml ? '8px' : '0';
+    const col = totalEpargne>=t ? 'var(--green)' : 'var(--text3)';
+    const bg = totalEpargne>=t ? 'var(--green)' : 'var(--purple)';
+    progHtml += '<div class="prog-label" style="margin-top:' + mt + '"><span>Objectif ' + t.toLocaleString() + '€</span><span style="color:' + col + ';font-weight:500">' + totalEpargne + '€ / ' + t.toLocaleString() + '€</span></div><div class="prog-track"><div class="prog-fill" style="width:' + p + '%;background:' + bg + '"></div></div>';
+  });
+  prog.innerHTML=progHtml;
+  c.appendChild(prog);
+  const wb=document.createElement('div');wb.className='sec-title';wb.style.marginTop='12px';wb.innerHTML='<i class="ti ti-calendar-week" style="font-size:12px;color:var(--purple)"></i>Bonus performance semaine';c.appendChild(wb);
+  const bonusCard=document.createElement('div');bonusCard.className='card';
+  const p=G.params||{};
+  bonusCard.innerHTML=`<div class="row"><span style="flex:1;font-size:12px;color:var(--text2)">Virement fixe mensuel</span><span style="font-size:12px;font-weight:500;color:var(--green)">${p.epargneFixe||50}€</span></div><div class="row"><span style="flex:1;font-size:12px;color:var(--text2)">Streak 7/7 jours</span><span style="font-size:12px;font-weight:500;color:var(--text3)">+${p.bonus7||20}€</span></div><div class="row"><span style="flex:1;font-size:12px;color:var(--text2)">80%+ quetes completees</span><span style="font-size:12px;font-weight:500;color:var(--text3)">+${p.bonus80||15}€</span></div><div class="row"><span style="flex:1;font-size:12px;color:var(--text2)">Habitudes 6/6 tous les jours</span><span style="font-size:12px;font-weight:500;color:var(--text3)">+${p.bonusHab||10}€</span></div><div class="row"><span style="flex:1;font-size:12px;color:var(--text2)">Daily log complet</span><span style="font-size:12px;font-weight:500;color:var(--text3)">+${p.bonusLog||5}€</span></div>`;
+  c.appendChild(bonusCard);
+  const av=document.createElement('div');av.className='sec-title';av.style.marginTop='12px';av.innerHTML='<i class="ti ti-plus" style="font-size:12px;color:var(--green)"></i>Ajouter un virement';c.appendChild(av);
+  const addCard=document.createElement('div');addCard.className='card';
+  addCard.innerHTML=`<div class="row"><span style="font-size:13px;color:var(--text2);flex:1">Montant</span><input type="number" id="epargneAmount" placeholder="50" style="width:80px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:5px 8px;font-size:13px;color:var(--text);background:var(--bg3);text-align:right">€</div><div class="row"><span style="font-size:13px;color:var(--text2);flex:1">Note</span><input type="text" id="epargneNote" placeholder="Prime, economie..." style="width:160px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:5px 8px;font-size:13px;color:var(--text);background:var(--bg3)"></div><button onclick="addEpargne()" class="btn-primary" style="background:var(--green)"><i class="ti ti-plus" style="font-size:13px;margin-right:4px"></i>Enregistrer le virement</button>`;
+  c.appendChild(addCard);
+}
+
+function buildHistorique(c){
+  const h=document.createElement('div');h.className='sec-title';h.innerHTML='<i class="ti ti-history" style="font-size:12px"></i>Transactions recentes';c.appendChild(h);
+  const card=document.createElement('div');card.className='card';
+  const hist=[...(G.epargneHistory||[])].reverse().slice(0,20);
+  if(!hist.length){ card.innerHTML='<div style="font-size:13px;color:var(--text3);text-align:center;padding:16px">Aucune transaction</div>'; }
+  else{ hist.forEach(tx=>{ 
+    const txBg = tx.type==='epargne'?'rgba(29,158,117,0.2)':tx.type==='spend'?'rgba(216,90,48,0.2)':'rgba(123,111,232,0.2)';
+    const txIco = tx.type==='epargne'?'ti-piggy-bank':tx.type==='spend'?'ti-shopping-bag':'ti-flame';
+    const txCol = tx.type==='epargne'?'var(--green)':tx.type==='spend'?'var(--coral)':'var(--purple)';
+    const amtCol = tx.amount>0&&tx.type!=='spend'?'var(--green)':'var(--red)';
+    const amtTxt = tx.type==='epargne'?'+'+tx.amount+'€':tx.amount>0?'+'+tx.amount+' ⚙':tx.amount+' ⚙';
+    card.innerHTML+='<div class="row"><div style="width:28px;height:28px;border-radius:50%;background:'+txBg+';display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti '+txIco+'" style="font-size:13px;color:'+txCol+'"></i></div><div style="flex:1"><div style="font-size:13px;color:var(--text)">'+tx.label+'</div><div style="font-size:11px;color:var(--text3)">'+tx.date+'</div></div><span style="font-size:13px;font-weight:500;color:'+amtCol+'">'+amtTxt+'</span></div>';
+  }); }
+  c.appendChild(card);
+}
+
+function addEpargne(){
+  const amount=parseFloat(document.getElementById('epargneAmount')?.value);
+  const note=document.getElementById('epargneNote')?.value||'Virement manuel';
+  if(!amount||amount<=0){ showToast('Montant invalide','normal'); return; }
+  G.epargneTotal=(G.epargneTotal||0)+amount;
+  if(!G.epargneHistory) G.epargneHistory=[];
+  G.epargneHistory.push({type:'epargne',label:note,amount,date:new Date().toLocaleDateString('fr-FR')});
+  saveLocal(); checkAchievements(); renderSpokes(); showToast('+'+amount+'€ epargnes !','green-t');
+}
+
+function buyBuff(id){
+  const b=SHOP_BUFFS.find(x=>x.id===id);
+  if(!b||G.spokes<b.price) return;
+  if(!confirm('Acheter '+b.name+' pour '+b.price.toLocaleString()+' ⚙ ?')) return;
+  G.spokes-=b.price;
+  if(!G.buffs) G.buffs=[];
+  G.buffs=G.buffs.filter(x=>x.id!==id);
+  G.buffs.push({id,name:b.name,xpBonus:b.xpBonus,expiry:Date.now()+b.days*86400000});
+  if(!G.epargneHistory) G.epargneHistory=[];
+  G.epargneHistory.push({type:'spend',label:'Achat : '+b.name,amount:-b.price,date:new Date().toLocaleDateString('fr-FR')});
+  saveLocal(); renderUI(); renderSpokes(); showToast('Buff active : '+b.name,'gold');
+}
+
+function buyProtection(qty,price){
+  if(G.spokes<price) return;
+  if(!confirm('Acheter '+qty+' protection(s) pour '+price.toLocaleString()+' ⚙ ?')) return;
+  G.spokes-=price; G.streakProtections=(G.streakProtections||0)+qty;
+  if(!G.epargneHistory) G.epargneHistory=[];
+  G.epargneHistory.push({type:'spend',label:'Achat : Protection x'+qty,amount:-price,date:new Date().toLocaleDateString('fr-FR')});
+  saveLocal(); renderUI(); renderSpokes(); showToast(qty+' protection(s) achetee(s) !','green-t');
+}
+
+function buyReward(id,name,price){
+  if(G.spokes<price) return;
+  if(!confirm('Acheter "'+name+'" pour '+price.toLocaleString()+' ⚙ ? Tu dois te l\'offrir dans la vraie vie !')) return;
+  G.spokes-=price;
+  if(!G.epargneHistory) G.epargneHistory=[];
+  G.epargneHistory.push({type:'spend',label:'Recompense : '+name,amount:-price,date:new Date().toLocaleDateString('fr-FR')});
+  saveLocal(); renderUI(); renderSpokes(); showToast('Recompense achetee : '+name+' ! Offre-la toi !','gold');
+}
+
+// ============================================================
+// ACHIEVEMENTS PAGE
+// ============================================================
+function renderAchievements(){
+  const c=document.getElementById('achContainer'); c.innerHTML='';
+  const done=G.achievementsDone||[];
+  const total=ACHIEVEMENTS.length, doneCount=done.length;
+  const pct=Math.round(doneCount/total*100);
+  const m=document.createElement('div');m.className='metric-grid';
+  m.innerHTML=`<div class="metric"><div class="metric-label">Debloques</div><div class="metric-val" style="color:var(--purple)">${doneCount}</div><div class="metric-sub">sur ${total} achievements</div></div><div class="metric"><div class="metric-label">Spokes gagnes</div><div class="metric-val" style="color:var(--amber)">${ACHIEVEMENTS.filter(a=>done.includes(a.id)).reduce((s,a)=>s+a.spokes,0).toLocaleString()} ⚙</div></div><div class="metric"><div class="metric-label">Prochain</div><div class="metric-val" style="font-size:14px;margin-top:2px">${ACHIEVEMENTS.find(a=>!done.includes(a.id))?.name||'Tous debloques !'}</div></div>`;
+  c.appendChild(m);
+  const pw=document.createElement('div');pw.className='prog-wrap';
+  pw.innerHTML=`<div class="prog-label"><span>Progression globale</span><span style="color:var(--purple);font-weight:500">${doneCount} / ${total} — ${pct}%</span></div><div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:var(--purple)"></div></div>`;
+  c.appendChild(pw);
+  const cats=[{id:'progression',label:'Progression',icon:'ti-trending-up'},{id:'discipline',label:'Discipline',icon:'ti-flame'},{id:'performance',label:'Performance',icon:'ti-sword'},{id:'finances',label:'Finances',icon:'ti-coin'}];
+  cats.forEach(cat=>{
+    const catAchs=ACHIEVEMENTS.filter(a=>a.cat===cat.id);
+    const t=document.createElement('div');t.className='sec-title';t.style.marginTop='16px';t.innerHTML=`<i class="ti ${cat.icon}" style="font-size:12px"></i>${cat.label}`;c.appendChild(t);
+    catAchs.forEach(a=>{
+      const isDone=done.includes(a.id);
+      const el=document.createElement('div');
+      el.className='ach-card'+(isDone?' unlocked':' locked');
+      el.innerHTML=`<div class="ach-ico" style="background:${isDone?a.ico_bg:'var(--bg3)'};color:${isDone?a.ico_color:'var(--text3)'}"><i class="ti ${a.icon}"></i></div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:${isDone?'var(--text)':'var(--text3)'};">${a.name}</div><div style="font-size:11px;color:var(--text3);margin-top:1px">${a.desc}</div>${isDone?'<div style="font-size:10px;color:var(--green);margin-top:2px">Debloque</div>':''}</div><div style="text-align:right"><div style="font-size:12px;font-weight:500;color:${isDone?'var(--green)':'var(--text3)'}">+${a.spokes.toLocaleString()} ⚙</div>${isDone?'<div style="width:18px;height:18px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;margin-top:4px;margin-left:auto"><i class="ti ti-check" style="font-size:10px;color:#fff"></i></div>':'<i class="ti ti-lock" style="font-size:14px;color:var(--text3);margin-top:4px;display:block;text-align:right"></i>'}</div>`;
+      c.appendChild(el);
+    });
+  });
+}
+
+// ============================================================
+// COMPETITION PAGE
+// ============================================================
+function renderCompetition(){
+  const c=document.getElementById('competitionContainer'); c.innerHTML='';
+  if(G.lvl<60){
+    c.innerHTML=`<div style="text-align:center;padding:32px 0"><i class="ti ti-lock" style="font-size:36px;color:var(--text3);display:block;margin-bottom:12px"></i><div style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px">Mode Competition</div><div style="font-size:13px;color:var(--text2)">Debloque au niveau 60</div><div style="font-size:13px;color:var(--purple);margin-top:4px">Niv. actuel : ${G.lvl}</div></div>`;
+    return;
+  }
+  const wr=G.weeklyRecords||{xp:0,habits:0,quests:0,spokes:0};
+  const lastWr=G.lastWeeklyRecords||{xp:0,habits:0,quests:0,spokes:0};
+  const records=[
+    {label:'XP gagne',cur:wr.xp||0,prev:lastWr.xp||0,unit:'XP'},
+    {label:'Habitudes',cur:wr.habits||0,prev:lastWr.habits||0,unit:''},
+    {label:'Quetes',cur:wr.quests||0,prev:lastWr.quests||0,unit:''},
+    {label:'Spokes',cur:wr.spokes||0,prev:lastWr.spokes||0,unit:'⚙'},
+    {label:'Streak maintenu',cur:G.streak>=7?7:G.streak,prev:lastWr.streak||0,unit:'j'},
+  ];
+  const beaten=records.filter(r=>r.cur>r.prev).length;
+  const grade=beaten===5?'Or':beaten>=3?'Argent':beaten>=1?'Bronze':'—';
+  const gradeColors={Or:['rgba(239,159,39,0.2)','#EF9F27'],Argent:['rgba(136,135,128,0.2)','#B4B2A9'],Bronze:['rgba(216,90,48,0.2)','#D85A30'],'—':['var(--bg3)','var(--text3)']};
+  const [gbg,gc]=gradeColors[grade];
+  const t=document.createElement('div');t.className='sec-title';t.innerHTML='<i class="ti ti-podium" style="font-size:12px;color:var(--amber)"></i>Bilan semaine';c.appendChild(t);
+  const gradeCard=document.createElement('div');gradeCard.className='card';gradeCard.style.borderColor=gc;
+  gradeCard.innerHTML=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:48px;height:48px;border-radius:50%;background:${gbg};display:flex;align-items:center;justify-content:center;font-size:24px">${grade==='Or'?'🥇':grade==='Argent'?'🥈':grade==='Bronze'?'🥉':'—'}</div><div><div style="font-family:var(--font-display);font-size:16px;font-weight:700;color:${gc}">Medaille ${grade}</div><div style="font-size:12px;color:var(--text2)">${beaten}/5 records battus cette semaine</div></div></div>`;
+  records.forEach(r=>{ const diff=r.cur-r.prev; const up=diff>0; gradeCard.innerHTML+=`<div class="row"><span style="flex:1;font-size:12px;color:var(--text2)">${r.label}</span><span style="font-size:12px;font-weight:500;color:var(--purple)">${r.cur.toLocaleString()} ${r.unit}</span><span style="font-size:11px;color:${up?'var(--green)':'var(--red)'};margin-left:8px">${up?'↑':diff===0?'=':'↓'} ${Math.abs(diff)} ${r.unit}</span></div>`; });
+  c.appendChild(gradeCard);
+}
+
+// ============================================================
+// VALIDATION JOURNÉE
+// ============================================================
+
+
+function validateDay(){
+  let gained=0, sg={force:0,recup:0,vita:0,volo:0}, spokesGained=0;
+  habitDone.forEach(id=>{ const h=ALL_HABITS.find(x=>x.id===id); if(h){ gained+=h.xp; spokesGained+=h.spokes; sg.volo+=1; } });
+  if(habitDone.size===ALL_HABITS.length){ gained+=50; spokesGained+=25; sg.volo+=2; }
+  const curLabel=getSetLabel(G.currentSetIdx);
+  const qs=(G.questSets&&G.questSets[curLabel])||[];
+  qs.forEach(q=>{ if(questDone.has(q.id)){ gained+=q.xp; spokesGained+=q.spokes||Math.round(q.xp/2); sg[q.stat]=(sg[q.stat]||0)+1; } });
+  PALIERS.forEach(p=>{ if(G.lvl>=p.lvl){ (p.quests||[]).forEach(q=>{ if(palierQuestDone.has(q.id)){ gained+=q.xp; spokesGained+=q.spokes||Math.round(q.xp/2); sg[q.stat]=(sg[q.stat]||0)+q.pts; } }); } });
+  (G.aiQuestsByPalier&&Object.values(G.aiQuestsByPalier)||[]).flat().forEach(q=>{ if(aiQuestDone.has('ai-'+q.id)){ gained+=q.xp; spokesGained+=q.spokes||Math.round(q.xp/2); sg[q.stat]=(sg[q.stat]||0)+(q.pts||1); } });
+  if(logState.repas==='good'){gained+=15;spokesGained+=7;sg.vita+=1;}if(logState.repas==='bad')gained-=5;
+  if(logState.hydra==='good'){gained+=10;spokesGained+=5;sg.vita+=1;}
+  if(logState.mental==='good'){gained+=10;spokesGained+=5;sg.recup+=1;}if(logState.mental==='bad')gained-=5;
+  const sleep=parseFloat(document.getElementById('sleepInput').value);
+  if(!isNaN(sleep)){if(sleep>=8){gained+=30;spokesGained+=15;sg.recup+=2;}else if(sleep>=6.5){gained+=10;spokesGained+=5;sg.recup+=1;}else gained-=10;}
+  if(gained<=0&&habitDone.size===0&&questDone.size===0){showToast('Complete au moins une habitude ou quete !','normal');return;}
+  const xpg=addXP(Math.max(gained,0));
+  addStats(sg);
+  addSpokes(spokesGained);
+  G.streak=(G.streak||0)+1;
+  G.lastValidDate=today();
+  if(!G.weeklyRecords) G.weeklyRecords={xp:0,habits:0,quests:0,spokes:0};
+  G.weeklyRecords.xp=(G.weeklyRecords.xp||0)+xpg;
+  G.weeklyRecords.habits=(G.weeklyRecords.habits||0)+habitDone.size;
+  G.weeklyRecords.quests=(G.weeklyRecords.quests||0)+questDone.size+palierQuestDone.size;
+  G.weeklyRecords.spokes=(G.weeklyRecords.spokes||0)+spokesGained;
+  renderUI();
+  checkAchievements();
+  saveLocal();
+  if(window._fbUser) saveToFirebase();
+  if(!document.getElementById('toast').classList.contains('show')) showToast('+'+xpg+' XP · +'+spokesGained+' ⚙ !'+(G.isMaster?' (Maitre x0.5)':''),'green-t');
+  habitDone.clear(); questDone.clear(); palierQuestDone.clear(); aiQuestDone.clear(); logState={};
+  document.querySelectorAll('.habit-item').forEach(x=>x.classList.remove('done'));
+  document.querySelectorAll('.quest-item').forEach(x=>x.classList.remove('done'));
+  document.querySelectorAll('.log-btn').forEach(x=>x.className='log-btn');
+  document.getElementById('sleepInput').value='';
+  updateVolBar();
+  if(document.getElementById('p-quetes').classList.contains('visible')) renderQuetes();
+  if(document.getElementById('p-paliers').classList.contains('visible')) renderPaliers();
+  if(document.getElementById('p-spokes').classList.contains('visible')) renderSpokes();
+}
+
+function doReset(){
+  if(!confirm('Remettre toute la progression a zero ? IRREVERSIBLE.')) return;
+  localStorage.removeItem(SAVE_KEY);
+  G=JSON.parse(JSON.stringify(DEF));
+  habitDone=new Set(); questDone=new Set(); palierQuestDone=new Set(); aiQuestDone=new Set(); logState={};
+  openChapter=null;
+  document.querySelectorAll('.habit-item').forEach(x=>x.classList.remove('done'));
+  document.querySelectorAll('.log-btn').forEach(x=>x.className='log-btn');
+  const si=document.getElementById('sleepInput'); if(si) si.value='';
+  updateVolBar();
+  renderUI();
+  renderHabitudes();
+  renderPaliers();
+  renderAchievements();
+  renderCompetition();
+  renderStory();
+  setSaveStatus('Remis a zero', false);
+  showToast('Progression remise a zero !','normal');
+}
+
+// ============================================================
+// NAV & PARAMS
+// ============================================================
+function showPage(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('visible'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('visible');
+  btn.classList.add('active');
+  if(id==='quetes') renderQuetes();
+  if(id==='histoire') renderStory();
+  if(id==='inventaire') renderInventaire();
+  if(id==='spokes') renderSpokes();
+  if(id==='paliers') renderPaliers();
+  if(id==='achievements') renderAchievements();
+  if(id==='competition') renderCompetition();
+  if(id==='habitudes') renderHabitudes();
+}
+
+function toggleView(){
+  const t=document.getElementById('viewToggle');
+  t.classList.toggle('off');
+}
+
+function applyParams(){
+  const p=G.params||{};
+  if(document.getElementById('paramName')) document.getElementById('paramName').value=p.name||'Suliman';
+  if(document.getElementById('paramEpargneFixe')) document.getElementById('paramEpargneFixe').value=p.epargneFixe||50;
+  if(document.getElementById('paramBonus7')) document.getElementById('paramBonus7').value=p.bonus7||20;
+  if(document.getElementById('paramBonus80')) document.getElementById('paramBonus80').value=p.bonus80||15;
+  if(document.getElementById('paramBonusHab')) document.getElementById('paramBonusHab').value=p.bonusHab||10;
+  if(document.getElementById('paramBonusLog')) document.getElementById('paramBonusLog').value=p.bonusLog||5;
+  if(document.getElementById('paramVelo')) document.getElementById('paramVelo').value=p.veloKm||10;
+  if(document.getElementById('paramTrail')) document.getElementById('paramTrail').value=p.trailKm||8;
+  if(document.getElementById('paramRunning')) document.getElementById('paramRunning').value=p.runningKm||5;
+}
+
+function saveParams(){
+  G.params={
+    name:document.getElementById('paramName').value||'Suliman',
+    epargneFixe:parseFloat(document.getElementById('paramEpargneFixe').value)||50,
+    bonus7:parseFloat(document.getElementById('paramBonus7').value)||20,
+    bonus80:parseFloat(document.getElementById('paramBonus80').value)||15,
+    bonusHab:parseFloat(document.getElementById('paramBonusHab').value)||10,
+    bonusLog:parseFloat(document.getElementById('paramBonusLog').value)||5,
+    veloKm:parseFloat(document.getElementById('paramVelo').value)||10,
+    trailKm:parseFloat(document.getElementById('paramTrail').value)||8,
+    runningKm:parseFloat(document.getElementById('paramRunning').value)||5,
+  };
+  saveLocal(); renderUI(); showToast('Parametres sauvegardes !','green-t');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg, type){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show'+(type==='gold'?' gold':type==='green-t'?' green-t':'');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ============================================================
+// FIREBASE
+// ============================================================
+async function saveToFirebase(){
+  if(!window._fbUser){ showToast('Connecte-toi a Firebase !', 'normal'); return; }
+  try{
+    const data = {...G, habitDone:[...habitDone], questDone:[...questDone], palierQuestDone:[...palierQuestDone], aiQuestDone:[...aiQuestDone], logState};
+    await _db.collection('users').doc(window._fbUser.uid).set({data: JSON.stringify(data), updatedAt: new Date().toISOString()});
+    showToast('Sauvegarde cloud reussie !', 'green-t');
+    document.getElementById('firebaseStatus').textContent = 'Sauvegarde le ' + new Date().toLocaleTimeString('fr-FR');
+  } catch(e){
+    console.error('Firebase save error:', e);
+    showToast('Erreur sauvegarde cloud', 'normal');
+  }
+}
+
+window.loadFromFirebase = async function(){
+  if(!window._fbUser) return;
+  try{
+    const snap = await _db.collection('users').doc(window._fbUser.uid).get();
+    if(snap.exists){
+      const s = JSON.parse(snap.data().data);
+      G = Object.assign(JSON.parse(JSON.stringify(DEF)), s);
+      habitDone = new Set(s.habitDone||[]);
+      questDone = new Set(s.questDone||[]);
+      palierQuestDone = new Set(s.palierQuestDone||[]);
+      aiQuestDone = new Set(s.aiQuestDone||[]);
+      logState = s.logState||{};
+      openChapter = null;
+      if(G.params) applyParams();
+      renderUI(); renderHabitudes(); renderCQBanner();
+      saveLocal();
+      showToast('Progression cloud chargee !', 'gold');
+    } else {
+      // Pas de sauvegarde cloud — uploader la locale
+      await saveToFirebase();
+    }
+  } catch(e){
+    console.error('Firebase load error:', e);
+  }
+}
+
+async function fbLogin(){
+  const email = document.getElementById('fbEmail').value;
+  const pass = document.getElementById('fbPassword').value;
+  if(!email||!pass){ showToast('Email et mot de passe requis', 'normal'); return; }
+  try{
+    await _auth.signInWithEmailAndPassword(email, pass);
+    showToast('Connexion reussie !', 'green-t');
+  } catch(e){
+    showToast('Erreur : ' + (e.code==='auth/invalid-credential'||e.code==='auth/wrong-password'?'Email ou mot de passe incorrect':e.message), 'normal');
+  }
+}
+
+async function fbRegister(){
+  const email = document.getElementById('fbEmail').value;
+  const pass = document.getElementById('fbPassword').value;
+  if(!email||!pass){ showToast('Email et mot de passe requis', 'normal'); return; }
+  if(pass.length < 6){ showToast('Mot de passe : 6 caracteres minimum', 'normal'); return; }
+  try{
+    await _auth.createUserWithEmailAndPassword(email, pass);
+    showToast('Compte cree et connecte !', 'gold');
+  } catch(e){
+    showToast('Erreur : ' + (e.code==='auth/email-already-in-use'?'Email deja utilise':e.message), 'normal');
+  }
+}
+
+async function fbLogout(){
+  if(!confirm('Se deconnecter de Firebase ?')) return;
+  await _auth.signOut();
+  showToast('Deconnecte', 'normal');
+}
+
+// Auto-save Firebase après chaque validation si connecté
+const _originalValidateDay = validateDay;
+
+// ============================================================
+// INIT
+// ============================================================
+async function init(){
+  loadLocal();
+  renderUI();
+  renderHabitudes();
+  renderCQBanner();
+  await checkAndRotateSet();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Log buttons
+  document.querySelectorAll('.log-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const g=btn.dataset.g;
+      document.querySelectorAll(`[data-g="${g}"]`).forEach(b=>{ b.className='log-btn'; });
+      btn.classList.add(btn.dataset.c);
+      logState[g]=btn.dataset.v;
+    });
+  });
+  document.getElementById('validateBtn').addEventListener('click', validateDay);
+  document.getElementById('saveBtn').addEventListener('click', ()=>{ saveLocal(); showToast('Progression sauvegardee !','green-t'); });
+  document.getElementById('resetBtn').addEventListener('click', doReset);
+  document.getElementById('resetBtn2')?.addEventListener('click', doReset);
+  document.getElementById('prestigeBtn').addEventListener('click', ()=>{
+    if(G.lvl<MAX_LVL) return;
+    if(!confirm('Activer le mode Maitre ? Retour niv. 60, stats conservees, difficulte x2.')) return;
+    G.isMaster=true; G.masterCount=(G.masterCount||0)+1; G.lvl=PRESTIGE_LVL; G.xp=totalXpTo(PRESTIGE_LVL,true);
+    saveLocal(); renderUI(); showToast('Mode Maitre active ! Bienvenue Maitre '+(G.masterCount||1),'gold');
+  });
+  init();
+});
+</script>
+</body>
+</html>
