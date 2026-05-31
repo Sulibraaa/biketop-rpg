@@ -1,24 +1,18 @@
 exports.handler = async function(event, context) {
-  // Autoriser les requêtes CORS
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Content-Type': 'application/json'
   };
-
-  // Gérer le preflight CORS
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
-
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
-
   try {
     const body = JSON.parse(event.body);
-
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -27,33 +21,17 @@ exports.handler = async function(event, context) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: body.model || 'claude-sonnet-4-20250514',
+        model: 'claude-opus-4-6',
         max_tokens: body.max_tokens || 2000,
         messages: body.messages
       })
     });
-
     const data = await response.json();
-
     if (!response.ok) {
-      return {
-        statusCode: response.status,
-        headers,
-        body: JSON.stringify({ error: data.error || 'API error' })
-      };
+      return { statusCode: response.status, headers, body: JSON.stringify({ error: data.error || 'API error' }) };
     }
-
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify(data)
-    };
-
+    return { statusCode: 200, headers, body: JSON.stringify(data) };
   } catch (error) {
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: error.message })
-    };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: error.message }) };
   }
 };
