@@ -1149,7 +1149,7 @@ async function generatePalierQuests(lvl){
   if(area) area.innerHTML=`<div style="font-size:12px;color:var(--text2);text-align:center;padding:10px"><i class="ti ti-loader spinning" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Generation...</div>`;
   try{
     const p=PALIERS.find(x=>x.lvl===lvl);
-    const res=await fetch('/.netlify/functions/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:'Palier '+lvl+' "'+p.name+'". '+PALIER_QUEST_PROMPT}]})});
+    const res=await fetch('https://claude-proxy.suley-cordaro.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:'Palier '+lvl+' "'+p.name+'". '+PALIER_QUEST_PROMPT}]})});
     const data=await res.json();
     const quests=(() => { const _raw = ((data&&data.content)?data.content.map(i=>i.text||''):['']).join('').replace(/```json|```/g,'').trim(); if(!_raw) throw new Error('empty'); return JSON.parse(_raw); })();
     if(!G.aiQuestsByPalier) G.aiQuestsByPalier={};
@@ -1208,7 +1208,7 @@ function getActiveChIdx(){ if(!G.story||G.story.error) return 0; const done=new 
 async function generateStory(){
   if(generatingStory) return; generatingStory=true; renderStory();
   try{
-    const res=await fetch('/.netlify/functions/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',content:STORY_PROMPT}]})});
+    const res=await fetch('https://claude-proxy.suley-cordaro.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',content:STORY_PROMPT}]})});
     const data=await res.json();
     const parsed=(() => { const _raw = ((data&&data.content)?data.content.map(i=>i.text||''):['']).join('').replace(/```json|```/g,'').trim(); if(!_raw) throw new Error('empty'); return JSON.parse(_raw); })();
     parsed.xp_total=parsed.chapitres.reduce((s,c)=>s+c.xp,0);
@@ -1224,7 +1224,7 @@ async function generateCQ(capLvl){
   if(generatingCQ===capLvl) return; generatingCQ=capLvl; renderCQBanner();
   const cIdx=CQ_CAPS.indexOf(capLvl), meta=CQ_META[cIdx], nextCl=CLASSES[cIdx+1];
   try{
-    const res=await fetch('/.netlify/functions/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:'Passage niv '+capLvl+' vers '+nextCl.name+'. Duree : '+meta.label+'. Difficulte : '+meta.diff+' rang '+meta.rank+'/IV. '+CQ_PROMPT}]})});
+    const res=await fetch('https://claude-proxy.suley-cordaro.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:'Passage niv '+capLvl+' vers '+nextCl.name+'. Duree : '+meta.label+'. Difficulte : '+meta.diff+' rang '+meta.rank+'/IV. '+CQ_PROMPT}]})});
     const data=await res.json();
     G.classQuests[capLvl]=(() => { const _raw = ((data&&data.content)?data.content.map(i=>i.text||''):['']).join('').replace(/```json|```/g,'').trim(); if(!_raw) throw new Error('empty'); return JSON.parse(_raw); })();
     if(!G.classQuestsObjDone[capLvl]) G.classQuestsObjDone[capLvl]=[];
