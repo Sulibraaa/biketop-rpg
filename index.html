@@ -1076,7 +1076,7 @@ async function generateSet(setIdx, isPreload=false){
   const label = getSetLabel(setIdx);
   if(document.getElementById('p-quetes').classList.contains('visible')) renderQuetes();
   try{
-    const res = await fetch('/.netlify/functions/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:'Genere le set '+label+'. '+SET_PROMPT}]})});
+    const res = await fetch('https://claude-proxy.suley-cordaro.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:'Genere le set '+label+'. '+SET_PROMPT}]})});
     const data = await res.json();
     const parsed = (() => { const _raw = ((data&&data.content)?data.content.map(i=>i.text||''):['']).join('').replace(/```json|```/g,'').trim(); if(!_raw) throw new Error('empty'); return JSON.parse(_raw); })();
     if(!G.questSets) G.questSets={};
