@@ -1750,14 +1750,22 @@ function validateDay(){
     G.streak=(G.streak||0)+1;
     if(G.streak>(G.bestStreak||0)) G.bestStreak=G.streak;
   } else {
-    // Pénalité si streak cassé
-    if(G.streak>0){
+  // Journee incomplete : protection de streak avant penalite
+  if(G.streak>0){
+    const protDispo=(G.streakProtections||0)>0;
+    const dejaProtHier=G.lastProtDate && G.lastProtDate===yesterday();
+    if(protDispo && !dejaProtHier){
+      G.streakProtections=G.streakProtections-1;
+      G.lastProtDate=today();
+      showToast('Protection de streak activee ! Serie preservee ('+G.streakProtections+' restante'+(G.streakProtections>1?'s':'')+')','green-t');
+    } else {
       G.streakLost=(G.streakLost||0)+1;
       G.streak=0;
       G.stats.volo=Math.max(0,G.stats.volo-2);
       showToast('Streak perdu ! -2 Volonte','normal');
     }
   }
+}
   G.lastValidDate=today();
   if(!G.weeklyRecords) G.weeklyRecords={xp:0,habits:0,quests:0,spokes:0};
   G.weeklyRecords.xp=(G.weeklyRecords.xp||0)+xpg;
